@@ -58,13 +58,25 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-core</artifactId>
+                <version>${flyway.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.flywaydb</groupId>
-                <artifactId>flyway-core</artifactId>
+                <artifactId>flyway-maven-plugin</artifactId>
                 <version>${flyway.version}</version>
+                <configuration>
+                    <driver>org.h2.Driver</driver>
+                    <url>jdbc:h2:~/telegram-info-bot</url>
+                    <baseDir>db/migration</baseDir>
+                    <user>youweb</user>
+                    <password></password>
+                </configuration>
             </plugin>
         </plugins>
     </build>
