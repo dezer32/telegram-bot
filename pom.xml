@@ -19,6 +19,8 @@
         <typesafe.config.version>1.3.1</typesafe.config.version>
         <junit.version>4.12</junit.version>
         <flyway.version>4.0.3</flyway.version>
+        <HikariCP.version>2.5.1</HikariCP.version>
+        <derby.version>10.12.1.1</derby.version>
     </properties>
 
     <dependencies>
@@ -31,6 +33,22 @@
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-core</artifactId>
             <version>${querydsl.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>com.querydsl</groupId>
+          <artifactId>querydsl-sql</artifactId>
+          <version>${querydsl.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>com.querydsl</groupId>
+          <artifactId>querydsl-sql-codegen</artifactId>
+          <version>${querydsl.version}</version>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-log4j12</artifactId>
+          <version>1.6.1</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -59,9 +77,14 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-                <groupId>org.flywaydb</groupId>
-                <artifactId>flyway-core</artifactId>
-                <version>${flyway.version}</version>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>${HikariCP.version}</version>
         </dependency>
     </dependencies>
     <build>
@@ -72,12 +95,39 @@
                 <version>${flyway.version}</version>
                 <configuration>
                     <driver>org.h2.Driver</driver>
-                    <url>jdbc:h2:~/telegram-info-bot</url>
+                    <url>jdbc:h2:./tbot</url>
                     <baseDir>db/migration</baseDir>
                     <user>youweb</user>
                     <password></password>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.querydsl</groupId>
+                <artifactId>querydsl-maven-plugin</artifactId>
+                <version>${querydsl.version}</version>
+                <executions>
+                  <execution>
+                    <goals>
+                      <goal>export</goal>
+                    </goals>
+                  </execution>
+                </executions>
+                <configuration>
+                  <jdbcDriver>org.h2.Driver</jdbcDriver>
+                  <jdbcUrl>jdbc:h2:./tbot</jdbcUrl>
+                  <jdbcUser>youweb</jdbcUser>
+                  <jdbcPassword></jdbcPassword>
+                  <packageName>ru.youweb.jdbc</packageName>
+                  <targetFolder>target/generated-sources/java</targetFolder>
+                </configuration>
+                <dependencies>
+                  <dependency>
+                        <groupId>com.h2database</groupId>
+                        <artifactId>h2</artifactId>
+                        <version>${h2.version}</version>
+                    </dependency>
+                </dependencies>
+              </plugin>
         </plugins>
     </build>
 </project>
