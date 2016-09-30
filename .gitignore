@@ -1,8 +1,19 @@
-target/
-.idea/
-project/target/
+# eclipse
+.project
+.classpath
+.settings
+
+# idea
+.idea
 *.iml
-.*
-Applied
-Resolved
-[Help
+*.iws
+*.ipr
+
+# java
+*.class
+
+# sbt
+target/
+
+# db
+tbot.*
