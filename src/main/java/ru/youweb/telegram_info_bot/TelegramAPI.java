@@ -59,6 +59,8 @@ public class TelegramAPI {
             for(TelegramGetUpdatesStruct.TelegramResultStruct result: updates.getResult())
             {
                 listUserMessage.add(result.message);
+                if (result.update_id >= updateId)
+                    updateId = result.update_id + 1;
             }
         }
         return listUserMessage;
