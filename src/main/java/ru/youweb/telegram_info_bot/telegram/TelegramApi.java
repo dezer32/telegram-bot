@@ -6,9 +6,9 @@ import org.asynchttpclient.AsyncCompletionHandler;
 import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.DefaultAsyncHttpClient;
 import org.asynchttpclient.Response;
+import ru.youweb.telegram_info_bot.telegram.dto.TelegramGetUpdates;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -18,11 +18,11 @@ public class TelegramAPI {
     //@TODO Откомментировать все поля(зачем они нужны в этом классе)
     private int updateId;
     private String urlBot;
-    private TelegramGetUpdatesStruct updates;
+    private TelegramGetUpdates updates;
     private AsyncHttpClient asyncHttpClient;
     private Gson gson;
 
-    private ArrayList<TelegramGetUpdatesStruct.TelegramMessageStruct> listUserMessage;
+    private ArrayList<TelegramGetUpdates.TelegramMessage> listUserMessage;
 
     public TelegramAPI() {
         //@TODO Перенести константу в конфигурационный файл(Typesafe Config)
@@ -31,7 +31,7 @@ public class TelegramAPI {
         asyncHttpClient = new DefaultAsyncHttpClient();
         //@TODO GSON создавать выше, передавать сюда как параметр
         gson = new Gson();
-        listUserMessage = new ArrayList<TelegramGetUpdatesStruct.TelegramMessageStruct>();
+        listUserMessage = new ArrayList<TelegramGetUpdates.TelegramMessage>();
     }
 
     //@TODO упростить тело метода и возвращать результаты полученные от Telegram с помощью return
@@ -46,7 +46,7 @@ public class TelegramAPI {
 
         Response response = fResponse.get();
         //@TODO Перенести парсинг в метод onCompleted
-        updates = gson.fromJson(response.getResponseBody(), TelegramGetUpdatesStruct.class);
+        updates = gson.fromJson(response.getResponseBody(), TelegramGetUpdates.class);
 
         //@TODO Перенести эту проверку в onCompleted, если проверка не прошла выбрасывать исключение(можно сделать собственное исключение ApplicationException)
         return updates.getValidateAnswer();
@@ -66,11 +66,11 @@ public class TelegramAPI {
     }
 
     //@TODO написать комментарий на метод в стиле JavaDoc(почитать что это)
-    protected ArrayList<TelegramGetUpdatesStruct.TelegramMessageStruct> update() throws ExecutionException, InterruptedException {
+    protected ArrayList<TelegramGetUpdates.TelegramMessage> update() throws ExecutionException, InterruptedException {
         listUserMessage.clear();
         if (getUpdates())
         {
-            for(TelegramGetUpdatesStruct.TelegramResultStruct result: updates.getResult())
+            for(TelegramGetUpdates.TelegramResult result: updates.getResult())
             //@TODO фигурная скобка в конце строки а не в начале
             {
                 listUserMessage.add(result.message);
