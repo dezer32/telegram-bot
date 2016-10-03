@@ -1,37 +1,39 @@
 package ru.youweb.telegram_info_bot;
 
 //@TODO Удалить неиспользуемый импорт
-import java.util.List;
+
+import com.google.gson.Gson;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
+import org.asynchttpclient.AsyncHttpClient;
+import org.asynchttpclient.DefaultAsyncHttpClient;
+import ru.youweb.telegram_info_bot.telegram.TelegramApi;
+import ru.youweb.telegram_info_bot.telegram.dto.TelegramMessage;
+
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 //@TODO Удалить ненужные комментарии(во всех классах)
+
 /**
  * Hello world!
  */
 public class App {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        TelegramAPI tApi = new TelegramAPI();
-        WorkDB workDB = new WorkDB();
-        //@TODO не нужно использовать метод con, в IDEA есть шаблоны для часто используемых операций
-        //например для System.out.println пишешь sout и жмешь TAB.
-        con("начало цикла");
-        while(true) {
-            for (TelegramGetUpdatesStruct.TelegramMessageStruct message : tApi.update()) {
-                workDB.addUser(message.from.id, message.from.first_name + " " + message.from.last_name);
-                con("Добавлено в бд юзер");
-                tApi.sendAnswer(message.from.id, "мегОтвет");
-                con("отправден ответ");
+        Config config = ConfigFactory.load();
+        AsyncHttpClient asyncHttpClient = new DefaultAsyncHttpClient();
+        TelegramApi tApi = new TelegramApi(config.getString("urlBot"), asyncHttpClient, new Gson());
+        FixerApi fApi = new FixerApi(asyncHttpClient, new Gson());
+        WorkDB workDB = new WorkDB(config.getString("db.jdbcUrl"), config.getString("db.user"), config.getString("db.pass"));
+
+        FirstRunApp firstRunApp = new FirstRunApp(workDB, fApi);
+
+        while (true) {
+            for (TelegramMessage message : tApi.update()) {
+                workDB.addUser(message.getFrom().getId(), message.getFrom().getFirstName() + " " + message.getFrom().getLastName());
+                tApi.sendAnswer(message.getFrom().getId(), "text");
             }
-            //@TODO Удалить, вместо этого используй Long pooling HTTP Request, определи для HTTP клиента и сервера
-            //свойство request timeout(просто timeout для сервера) и клиентский таймаут должен быть обязательно больше серверного(timeoute в 10 секунд для клиента и 7 для сервера вполне нормально)
-            TimeUnit.SECONDS.sleep(5);
         }
     }
-
-    public static void con(String str) {
-        System.out.println(str);
-    }
-
 }

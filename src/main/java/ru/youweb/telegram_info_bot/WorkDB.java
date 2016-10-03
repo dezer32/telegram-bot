@@ -1,38 +1,84 @@
 package ru.youweb.telegram_info_bot;
 
-import com.querydsl.sql.Configuration;
-import com.querydsl.sql.H2Templates;
-import com.querydsl.sql.SQLQueryFactory;
-import com.querydsl.sql.SQLTemplates;
+import com.google.gson.annotations.SerializedName;
+import com.querydsl.sql.*;
 import com.zaxxer.hikari.HikariDataSource;
+import ru.youweb.jdbc.QCurrency;
+import ru.youweb.jdbc.QExchange;
 import ru.youweb.jdbc.QUser;
 
-//@TODO Удалить неиспользуемый комментарий
-/**
- * Created by Youweb on 30.09.2016.
- */
 public class WorkDB {
 
     private SQLQueryFactory queryFactory;
 
-    public WorkDB() {
+    public WorkDB(String jdbcUrl, String user, String pass) {
         HikariDataSource ds = new HikariDataSource();
-        //@TODO все настройки вынести в конфиг Typesafe Config, как работать с библиотекой прочитать в офф документации
-        ds.setJdbcUrl("jdbc:h2:./tbot");
-        ds.setUsername("youweb");
-        ds.setPassword("");
+        ds.setJdbcUrl(jdbcUrl);
+        ds.setUsername(user);
+        ds.setPassword(pass);
 
-        //@TODO SQLQueryFactory эту фабрику передавать как параметр а не создавать тут, потому что фабрика может понадобиться в других подобных классах
         SQLTemplates templates = new H2Templates();
         Configuration config = new Configuration(templates);
         queryFactory = new SQLQueryFactory(config, ds);
     }
 
+    private int getIdCur(String nameCurrency) {
+        QCurrency qCurrency = QCurrency.currency;
+        return queryFactory.select(qCurrency.id).from(qCurrency).where(qCurrency.nameCurrency.eq(nameCurrency)).fetchOne();
+    }
+
     public void addUser(int id, String userName) {
         QUser qUser = QUser.user;
-        //@TODO qUser.all() заменить на selectFrom(qUser)
-        long countUser = queryFactory.select(qUser.all()).from(qUser).where(qUser.telegramId.eq(String.valueOf(id))).fetchCount();
+        long countUser = queryFactory
+                .select(qUser.id)
+                .from(qUser)
+                .where(qUser.telegramId.eq(String.valueOf(id)))
+                .fetchCount();
         if (countUser == 0)
             queryFactory.insert(qUser).columns(qUser.telegramId, qUser.name).values(id, userName).execute();
+    }
+
+    public double getAnswer(String curFrom, String curTo, String date) {
+        QExchange qExchange = QExchange.exchange;
+
+        return queryFactory
+                .select(qExchange.value)
+                .from(qExchange)
+                .where(qExchange.idCurFrom.eq(getIdCur(curFrom))
+                        .and(qExchange.idCurTo.eq(getIdCur(curTo)))
+                        .and(qExchange.date.eq(date)))
+                .fetchOne();
+    }
+
+    public void addCurrencyRate(String curFrom, String curTo, double value, String date) {
+        QExchange qExchange = QExchange.exchange;
+        queryFactory.insert(qExchange)
+                .columns(qExchange.idCurFrom, qExchange.idCurTo, qExchange.value, qExchange.date)
+                .values(getIdCur(curFrom),
+                        getIdCur(curTo),
+                        value, date)
+                .execute();
+    }
+
+    public void updateCurrencyRate(String curFrom, String curTo, double value, String date) {
+        QExchange qExchange = QExchange.exchange;
+        queryFactory.update(qExchange)
+                .where(qExchange.idCurFrom.eq(getIdCur(curFrom))
+                        .and(qExchange.idCurTo.eq(getIdCur(curTo)))
+                        .and(qExchange.date.eq(date)))
+                .set(qExchange.value, value)
+                .execute();
+    }
+
+    public void addCurrency(String currency) {
+        QCurrency qCurrency = QCurrency.currency;
+        long count = queryFactory
+                .select(qCurrency.id)
+                .from(qCurrency)
+                .where(qCurrency.nameCurrency.eq(currency))
+                .fetchCount();
+        if (count == 0) {
+            queryFactory.insert(qCurrency).columns(qCurrency.nameCurrency).values(currency).execute();
+        }
     }
 }

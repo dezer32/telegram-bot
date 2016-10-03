@@ -465,3 +465,53 @@ Caused by: java.lang.IllegalStateException: The file is locked: nio:C:/Users/You
 	at org.h2.mvstore.FileStore.open(FileStore.java:172)
 	at org.h2.mvstore.MVStore.<init>(MVStore.java:344)
 	... 32 more
+2016-10-03 18:44:56 database: flush
+org.h2.message.DbException: Внутренняя ошибка: "java.lang.IllegalStateException: The file is locked: nio:C:/Users/Youweb/Documents/Java Project/telegram-info-bot/tbot.mv.db [1.4.192/7]"
+General error: "java.lang.IllegalStateException: The file is locked: nio:C:/Users/Youweb/Documents/Java Project/telegram-info-bot/tbot.mv.db [1.4.192/7]" [50000-192]
+	at org.h2.message.DbException.get(DbException.java:168)
+	at org.h2.message.DbException.convert(DbException.java:295)
+	at org.h2.mvstore.db.MVTableEngine$1.uncaughtException(MVTableEngine.java:94)
+	at org.h2.mvstore.MVStore.panic(MVStore.java:375)
+	at org.h2.mvstore.MVStore.<init>(MVStore.java:358)
+	at org.h2.mvstore.MVStore$Builder.open(MVStore.java:2893)
+	at org.h2.mvstore.db.MVTableEngine$Store.open(MVTableEngine.java:154)
+	at org.h2.mvstore.db.MVTableEngine.init(MVTableEngine.java:99)
+	at org.h2.engine.Database.getPageStore(Database.java:2463)
+	at org.h2.engine.Database.open(Database.java:692)
+	at org.h2.engine.Database.openDatabase(Database.java:270)
+	at org.h2.engine.Database.<init>(Database.java:264)
+	at org.h2.engine.Engine.openSession(Engine.java:64)
+	at org.h2.engine.Engine.openSession(Engine.java:176)
+	at org.h2.engine.Engine.createSessionAndValidate(Engine.java:154)
+	at org.h2.engine.Engine.createSession(Engine.java:137)
+	at org.h2.engine.Engine.createSession(Engine.java:27)
+	at org.h2.engine.SessionRemote.connectEmbeddedOrServer(SessionRemote.java:349)
+	at org.h2.jdbc.JdbcConnection.<init>(JdbcConnection.java:118)
+	at org.h2.jdbc.JdbcConnection.<init>(JdbcConnection.java:102)
+	at org.h2.Driver.connect(Driver.java:72)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:95)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:101)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:341)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:506)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:105)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:94)
+	at com.querydsl.sql.SQLQueryFactory$DataSourceProvider.get(SQLQueryFactory.java:45)
+	at com.querydsl.sql.SQLQueryFactory$DataSourceProvider.get(SQLQueryFactory.java:34)
+	at com.querydsl.sql.AbstractSQLQuery.connection(AbstractSQLQuery.java:660)
+	at com.querydsl.sql.AbstractSQLQuery.unsafeCount(AbstractSQLQuery.java:592)
+	at com.querydsl.sql.AbstractSQLQuery.fetchCount(AbstractSQLQuery.java:132)
+	at ru.youweb.telegram_info_bot.WorkDB.addUser(WorkDB.java:36)
+	at ru.youweb.telegram_info_bot.App.main(App.java:31)
+Caused by: org.h2.jdbc.JdbcSQLException: Внутренняя ошибка: "java.lang.IllegalStateException: The file is locked: nio:C:/Users/Youweb/Documents/Java Project/telegram-info-bot/tbot.mv.db [1.4.192/7]"
+General error: "java.lang.IllegalStateException: The file is locked: nio:C:/Users/Youweb/Documents/Java Project/telegram-info-bot/tbot.mv.db [1.4.192/7]" [50000-192]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	... 34 more
+Caused by: java.lang.IllegalStateException: The file is locked: nio:C:/Users/Youweb/Documents/Java Project/telegram-info-bot/tbot.mv.db [1.4.192/7]
+	at org.h2.mvstore.DataUtils.newIllegalStateException(DataUtils.java:773)
+	at org.h2.mvstore.FileStore.open(FileStore.java:172)
+	at org.h2.mvstore.MVStore.<init>(MVStore.java:344)
+	... 29 more
+2016-10-03 19:12:55 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Синтаксическая ошибка в выражении SQL "TRUNCATE CURRENCY[*] "; ожидалось "TABLE"
+Syntax error in SQL statement "TRUNCATE CURRENCY[*] "; expected "TABLE"; SQL statement:
+truncate CURRENCY [42001-192]

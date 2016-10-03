@@ -1,82 +1,86 @@
-package ru.youweb.telegram_info_bot;
+package ru.youweb.telegram_info_bot.telegram;
 
 
 import com.google.gson.Gson;
-import org.asynchttpclient.AsyncCompletionHandler;
-import org.asynchttpclient.AsyncHttpClient;
-import org.asynchttpclient.DefaultAsyncHttpClient;
-import org.asynchttpclient.Response;
+import org.asynchttpclient.*;
 import ru.youweb.telegram_info_bot.telegram.dto.TelegramGetUpdates;
+import ru.youweb.telegram_info_bot.telegram.dto.TelegramMessage;
+import ru.youweb.telegram_info_bot.telegram.dto.TelegramResult;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
-//@TODO Переместить класс в паке ru.youweb.telegram_info_bot.telegram
-public class TelegramAPI {
+public class TelegramApi {
 
-    //@TODO Откомментировать все поля(зачем они нужны в этом классе)
+    //ID сообщения, используется для дальнейшего запрета на получение данного сообщения
     private int updateId;
+
+    //Адресс Телеграм бота
     private String urlBot;
+
+    //Объект с новыми сообщениями телеграмм боту
     private TelegramGetUpdates updates;
+
+    //Список с сообщениеми
+    private ArrayList<TelegramMessage> listUserMessage;
+
+    private ArrayList<Param> params;
+
     private AsyncHttpClient asyncHttpClient;
+
     private Gson gson;
 
-    private ArrayList<TelegramGetUpdates.TelegramMessage> listUserMessage;
+    private Request request;
 
-    public TelegramAPI() {
-        //@TODO Перенести константу в конфигурационный файл(Typesafe Config)
-        urlBot = "https://api.telegram.org/bot105972211:AAGjTz3ZC48qTKEcvgkYso3FyeNf1VwsAKc";
-        //@TODO Клиент создавать выше передавать сюда как параметр
-        asyncHttpClient = new DefaultAsyncHttpClient();
-        //@TODO GSON создавать выше, передавать сюда как параметр
-        gson = new Gson();
-        listUserMessage = new ArrayList<TelegramGetUpdates.TelegramMessage>();
+    public TelegramApi(String urlBot, AsyncHttpClient asyncHttpClient, Gson gson) {
+        this.urlBot = urlBot;
+        this.asyncHttpClient = asyncHttpClient;
+        this.gson = gson;
+        listUserMessage = new ArrayList<TelegramMessage>();
+        params = new ArrayList<Param>();
     }
 
-    //@TODO упростить тело метода и возвращать результаты полученные от Telegram с помощью return
-    private boolean getUpdates() throws ExecutionException, InterruptedException {
-        //@TODO параметры в HTTP запрос передавать не с помощью строки а с помощью средств AsyncHttpClient(предварительно прочитать как)
-        Future<Response> fResponse = asyncHttpClient.prepareGet(urlBot + "/getUpdates?offset=" + updateId).execute(new AsyncCompletionHandler<Response>() {
+    private TelegramGetUpdates getUpdates() throws ExecutionException, InterruptedException {
+        request = new RequestBuilder()
+                .setUrl(urlBot + "getUpdates")
+                .addQueryParam("offset", String.valueOf(updateId))
+                .addQueryParam("timeout", "7")
+                .setRequestTimeout(10000)
+                .build();
+
+        return asyncHttpClient.executeRequest(request, new AsyncCompletionHandler<TelegramGetUpdates>() {
             @Override
-            public Response onCompleted(Response response) throws Exception {
-                return response;
+            public TelegramGetUpdates onCompleted(Response response) throws Exception {
+                return gson.fromJson(response.getResponseBody(), TelegramGetUpdates.class);
             }
-        });
-
-        Response response = fResponse.get();
-        //@TODO Перенести парсинг в метод onCompleted
-        updates = gson.fromJson(response.getResponseBody(), TelegramGetUpdates.class);
-
-        //@TODO Перенести эту проверку в onCompleted, если проверка не прошла выбрасывать исключение(можно сделать собственное исключение ApplicationException)
-        return updates.getValidateAnswer();
+        }).get();
     }
 
-    //@TODO если метод не нужно использовать в будущем сделать его private, если нужно использовать во внешней среде, сделать public
-    //@TODO написать комментарий на метод в стиле JavaDoc(почитать что это)
-    protected void sendAnswer(int id, String text) {
-        //@TODO Для операций добавления использовать POST запрос
-        asyncHttpClient.prepareGet(urlBot + "/sendMessage?chat_id=" + id + "&text=" + text).execute(new AsyncCompletionHandler<Response>() {
-            @Override
-            public Response onCompleted(Response response) throws Exception {
-                //@TODO если не предполагается ничего обрабатывать то лучше избавиться от этого обработчика
-                return null;
-            }
-        });
+    /**
+     *
+     * @param id идентификатор чата с пользователем
+     * @param text текст ответа
+     */
+    public void sendAnswer(int id, String text) {
+        request = new RequestBuilder()
+                .setUrl(urlBot + "sendMessage")
+                .addFormParam("chat_id", String.valueOf(id))
+                .addFormParam("text", String.valueOf(text))
+                .build();
+
+        asyncHttpClient.executeRequest(request);
     }
 
-    //@TODO написать комментарий на метод в стиле JavaDoc(почитать что это)
-    protected ArrayList<TelegramGetUpdates.TelegramMessage> update() throws ExecutionException, InterruptedException {
+    /**
+     *
+     * @return возвращает список сообщение пользователей
+     */
+    public ArrayList<TelegramMessage> update() throws ExecutionException, InterruptedException {
         listUserMessage.clear();
-        if (getUpdates())
-        {
-            for(TelegramGetUpdates.TelegramResult result: updates.getResult())
-            //@TODO фигурная скобка в конце строки а не в начале
-            {
-                listUserMessage.add(result.message);
-                if (result.update_id >= updateId)
-                    updateId = result.update_id + 1;
-            }
+        for (TelegramResult result : getUpdates().getResult()) {
+            listUserMessage.add(result.getMessage());
+            if (result.getUpdateId() >= updateId)
+                updateId = result.getUpdateId() + 1;
         }
         return listUserMessage;
     }
