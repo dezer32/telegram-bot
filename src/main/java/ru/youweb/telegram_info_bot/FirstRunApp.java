@@ -27,7 +27,7 @@ public class FirstRunApp {
 
         currencyId.load();
 
-        long timeStamp = 978296400000l;
+        long timeStamp = 946674000000l;
 
         Calendar calendar = new GregorianCalendar();
 

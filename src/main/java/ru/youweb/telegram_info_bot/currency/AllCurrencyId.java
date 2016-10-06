@@ -19,7 +19,7 @@ public class AllCurrencyId {
         load();
     }
 
-    public void load(){
+    public void load() {
         currencyIdList.clear();
         List<Tuple> qCurrencies = workDB.getIdCur();
         QCurrency qCurrency = QCurrency.currency;
@@ -37,5 +37,13 @@ public class AllCurrencyId {
         workDB.addCurrency(nameCur);
         load();
         return getId(nameCur);
+    }
+
+    public List<String> getAllNameCurrency() {
+        List<String> listCurrency = new ArrayList<String>();
+        for (CurrencyId item : currencyIdList) {
+            listCurrency.add(item.getNameCurrency());
+        }
+        return listCurrency;
     }
 }

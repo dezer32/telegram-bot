@@ -12,6 +12,7 @@ import ru.youweb.telegram_info_bot.currency.FixerApi;
 import ru.youweb.telegram_info_bot.telegram.TelegramApi;
 import ru.youweb.telegram_info_bot.telegram.dto.TelegramMessage;
 
+import java.text.SimpleDateFormat;
 import java.util.concurrent.ExecutionException;
 
 //@TODO Удалить ненужные комментарии(во всех классах)
@@ -36,12 +37,16 @@ public class App {
 
         AllCurrencyId currencyId = new AllCurrencyId(workDB);
 
-        FirstRunApp firstRunApp = new FirstRunApp(workDB, fApi, currencyId);
+        Answer answer = new Answer(workDB, currencyId);
+
+        String strAnswer = "";
+        //FirstRunApp firstRunApp = new FirstRunApp(workDB, fApi, currencyId);
 
         while (true) {
             for (TelegramMessage message : tApi.update()) {
                 workDB.addUser(message.getFrom().getId(), message.getFrom().getFirstName() + " " + message.getFrom().getLastName());
-                tApi.sendAnswer(message.getFrom().getId(), "text");
+
+                tApi.sendAnswer(message.getFrom().getId(), answer.message(message.getText()));
             }
         }
     }

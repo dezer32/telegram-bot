@@ -46,6 +46,7 @@ public class WorkDB {
             queryFactory.insert(qUser).columns(qUser.telegramId, qUser.name).values(id, userName).execute();
     }
 
+    //delete method
     public double getAnswer(String curFrom, String curTo, String date) {
         QExchange qExchange = QExchange.exchange;
 
@@ -54,6 +55,18 @@ public class WorkDB {
                 .from(qExchange)
                 .where(qExchange.idCurFrom.eq(getIdCur(curFrom))
                         .and(qExchange.idCurTo.eq(getIdCur(curTo)))
+                        .and(qExchange.date.eq(date)))
+                .fetchOne();
+    }
+
+    public double getAnswer(int curFrom, int curTo, String date) {
+        QExchange qExchange = QExchange.exchange;
+
+        return queryFactory
+                .select(qExchange.value)
+                .from(qExchange)
+                .where(qExchange.idCurFrom.eq(curFrom)
+                        .and(qExchange.idCurTo.eq(curTo))
                         .and(qExchange.date.eq(date)))
                 .fetchOne();
     }
