@@ -7,11 +7,12 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.DefaultAsyncHttpClient;
+import ru.youweb.telegram_info_bot.currency.AllCurrencyId;
+import ru.youweb.telegram_info_bot.currency.FixerApi;
 import ru.youweb.telegram_info_bot.telegram.TelegramApi;
 import ru.youweb.telegram_info_bot.telegram.dto.TelegramMessage;
 
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 //@TODO Удалить ненужные комментарии(во всех классах)
 
@@ -21,13 +22,21 @@ import java.util.concurrent.TimeUnit;
 public class App {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        Config config = ConfigFactory.load();
         AsyncHttpClient asyncHttpClient = new DefaultAsyncHttpClient();
-        TelegramApi tApi = new TelegramApi(config.getString("urlBot"), asyncHttpClient, new Gson());
-        FixerApi fApi = new FixerApi(asyncHttpClient, new Gson());
+
+        Gson gson = new Gson();
+
+        Config config = ConfigFactory.load();
+
         WorkDB workDB = new WorkDB(config.getString("db.jdbcUrl"), config.getString("db.user"), config.getString("db.pass"));
 
-        FirstRunApp firstRunApp = new FirstRunApp(workDB, fApi);
+        TelegramApi tApi = new TelegramApi(config.getString("urlBot"), asyncHttpClient, gson);
+
+        FixerApi fApi = new FixerApi(asyncHttpClient, gson);
+
+        AllCurrencyId currencyId = new AllCurrencyId(workDB);
+
+        FirstRunApp firstRunApp = new FirstRunApp(workDB, fApi, currencyId);
 
         while (true) {
             for (TelegramMessage message : tApi.update()) {

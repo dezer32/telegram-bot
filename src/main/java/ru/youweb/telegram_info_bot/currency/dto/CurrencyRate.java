@@ -1,4 +1,4 @@
-package ru.youweb.telegram_info_bot;
+package ru.youweb.telegram_info_bot.currency.dto;
 
 import java.util.Map;
 

@@ -1,11 +1,13 @@
 package ru.youweb.telegram_info_bot;
 
-import com.google.gson.annotations.SerializedName;
+import com.querydsl.core.Tuple;
 import com.querydsl.sql.*;
 import com.zaxxer.hikari.HikariDataSource;
 import ru.youweb.jdbc.QCurrency;
 import ru.youweb.jdbc.QExchange;
 import ru.youweb.jdbc.QUser;
+
+import java.util.List;
 
 public class WorkDB {
 
@@ -22,9 +24,15 @@ public class WorkDB {
         queryFactory = new SQLQueryFactory(config, ds);
     }
 
+    //Избавиться от нижнего метода
     private int getIdCur(String nameCurrency) {
         QCurrency qCurrency = QCurrency.currency;
         return queryFactory.select(qCurrency.id).from(qCurrency).where(qCurrency.nameCurrency.eq(nameCurrency)).fetchOne();
+    }
+
+    public List<Tuple> getIdCur() {
+        QCurrency qCurrency = QCurrency.currency;
+        return queryFactory.select(qCurrency.all()).from(qCurrency).fetch();
     }
 
     public void addUser(int id, String userName) {
@@ -56,6 +64,16 @@ public class WorkDB {
                 .columns(qExchange.idCurFrom, qExchange.idCurTo, qExchange.value, qExchange.date)
                 .values(getIdCur(curFrom),
                         getIdCur(curTo),
+                        value, date)
+                .execute();
+    }
+
+    public void addCurrencyRate(int curFrom, int curTo, double value, String date) {
+        QExchange qExchange = QExchange.exchange;
+        queryFactory.insert(qExchange)
+                .columns(qExchange.idCurFrom, qExchange.idCurTo, qExchange.value, qExchange.date)
+                .values(curFrom,
+                        curTo,
                         value, date)
                 .execute();
     }

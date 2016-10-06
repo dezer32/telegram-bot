@@ -1,9 +1,9 @@
-package ru.youweb.telegram_info_bot;
+package ru.youweb.telegram_info_bot.currency;
 
 import com.google.gson.Gson;
 import org.asynchttpclient.*;
+import ru.youweb.telegram_info_bot.currency.dto.CurrencyRate;
 
-import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class FixerApi {
@@ -26,6 +26,9 @@ public class FixerApi {
         .setUrl(urlFixer + "/" + date)
         .addQueryParam("base", currency)
         .build();
+
+        System.out.println("load currency");
+
         return asyncHttpClient.executeRequest(request, new AsyncCompletionHandler<CurrencyRate>() {
             @Override
             public CurrencyRate onCompleted(Response response) throws Exception {
