@@ -40,7 +40,10 @@ public class App {
 
         AllCurrencyId currencyId = new AllCurrencyId(workDB);
 
+        FirstRunApp firstRunApp = new FirstRunApp(workDB, fApi, currencyId);
+
         Timer timer = new Timer();
+
 
         SchedulerTask st = new SchedulerTask(fApi, workDB, currencyId);
 
@@ -53,7 +56,6 @@ public class App {
         timer.schedule(st, new Date(timeScheduleStart), timeSchedulePeriod);
 
         Answer answer = new Answer(workDB, currencyId);
-        FirstRunApp firstRunApp = new FirstRunApp(workDB, fApi, currencyId);
 
         while (true) {
             for (TelegramMessage message : tApi.update()) {
