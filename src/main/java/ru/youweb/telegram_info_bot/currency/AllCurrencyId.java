@@ -20,10 +20,10 @@ public class AllCurrencyId {
     }
 
     public void load(){
+        currencyIdList.clear();
         List<Tuple> qCurrencies = workDB.getIdCur();
         QCurrency qCurrency = QCurrency.currency;
         for (Tuple item : qCurrencies) {
-
             currencyIdList.add(new CurrencyId(new Integer(item.get(qCurrency.id)), item.get(qCurrency.nameCurrency)));
         }
     }
@@ -34,6 +34,8 @@ public class AllCurrencyId {
                 return item.getId();
             }
         }
-        return 0;
+        workDB.addCurrency(nameCur);
+        load();
+        return getId(nameCur);
     }
 }
