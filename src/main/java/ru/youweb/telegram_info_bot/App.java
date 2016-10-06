@@ -13,6 +13,8 @@ import ru.youweb.telegram_info_bot.telegram.TelegramApi;
 import ru.youweb.telegram_info_bot.telegram.dto.TelegramMessage;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Timer;
 import java.util.concurrent.ExecutionException;
 
 //@TODO Удалить ненужные комментарии(во всех классах)
@@ -23,6 +25,7 @@ import java.util.concurrent.ExecutionException;
 public class App {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
+
         AsyncHttpClient asyncHttpClient = new DefaultAsyncHttpClient();
 
         Gson gson = new Gson();
@@ -37,15 +40,24 @@ public class App {
 
         AllCurrencyId currencyId = new AllCurrencyId(workDB);
 
-        Answer answer = new Answer(workDB, currencyId);
+        Timer timer = new Timer();
 
-        String strAnswer = "";
-        //FirstRunApp firstRunApp = new FirstRunApp(workDB, fApi, currencyId);
+        SchedulerTask st = new SchedulerTask(fApi, workDB, currencyId);
+
+        long timeScheduleStart = config.getLong("timer.scheduleStart");
+        long timeSchedulePeriod = config.getLong("timer.schedulePeriod");
+
+        while (timeScheduleStart < System.currentTimeMillis())
+            timeScheduleStart += timeSchedulePeriod;
+
+        timer.schedule(st, new Date(timeScheduleStart), timeSchedulePeriod);
+
+        Answer answer = new Answer(workDB, currencyId);
+        FirstRunApp firstRunApp = new FirstRunApp(workDB, fApi, currencyId);
 
         while (true) {
             for (TelegramMessage message : tApi.update()) {
                 workDB.addUser(message.getFrom().getId(), message.getFrom().getFirstName() + " " + message.getFrom().getLastName());
-
                 tApi.sendAnswer(message.getFrom().getId(), answer.message(message.getText()));
             }
         }

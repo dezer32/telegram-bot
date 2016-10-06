@@ -1,7 +1,6 @@
 package ru.youweb.telegram_info_bot;
 
 import ru.youweb.telegram_info_bot.currency.AllCurrencyId;
-import ru.youweb.telegram_info_bot.currency.dto.CurrencyId;
 import ru.youweb.telegram_info_bot.currency.dto.CurrencyRate;
 import ru.youweb.telegram_info_bot.currency.FixerApi;
 
@@ -46,7 +45,7 @@ public class FirstRunApp {
             System.out.println("date add " + date);
 
             for (Map.Entry<String, Double> item : currency.getRates().entrySet()) {
-                TimeUnit.SECONDS.sleep(1);
+                TimeUnit.MILLISECONDS.sleep(10);
                 currencyRate = fixerApi.getCurrencyRate(item.getKey(), date);
                 try {
                     for (Map.Entry<String, Double> rates : currencyRate.getRates().entrySet()) {

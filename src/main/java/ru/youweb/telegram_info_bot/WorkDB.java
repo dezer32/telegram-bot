@@ -90,12 +90,22 @@ public class WorkDB {
                         value, date)
                 .execute();
     }
-
+    //del method
     public void updateCurrencyRate(String curFrom, String curTo, double value, String date) {
         QExchange qExchange = QExchange.exchange;
         queryFactory.update(qExchange)
                 .where(qExchange.idCurFrom.eq(getIdCur(curFrom))
                         .and(qExchange.idCurTo.eq(getIdCur(curTo)))
+                        .and(qExchange.date.eq(date)))
+                .set(qExchange.value, value)
+                .execute();
+    }
+
+    public void updateCurrencyRate(int curFrom, int curTo, double value, String date) {
+        QExchange qExchange = QExchange.exchange;
+        queryFactory.update(qExchange)
+                .where(qExchange.idCurFrom.eq(curFrom)
+                        .and(qExchange.idCurTo.eq(curTo))
                         .and(qExchange.date.eq(date)))
                 .set(qExchange.value, value)
                 .execute();

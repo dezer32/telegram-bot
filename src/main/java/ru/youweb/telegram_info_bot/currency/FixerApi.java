@@ -37,4 +37,20 @@ public class FixerApi {
         }).get();
     }
 
+    public CurrencyRate getCurrencyRate(String currency) throws ExecutionException, InterruptedException {
+        request = new RequestBuilder()
+                .setUrl(urlFixer + "/latest")
+                .addQueryParam("base", currency)
+                .build();
+
+        System.out.println("load currency");
+
+        return asyncHttpClient.executeRequest(request, new AsyncCompletionHandler<CurrencyRate>() {
+            @Override
+            public CurrencyRate onCompleted(Response response) throws Exception {
+                return gson.fromJson(response.getResponseBody(), CurrencyRate.class);
+            }
+        }).get();
+    }
+
 }
