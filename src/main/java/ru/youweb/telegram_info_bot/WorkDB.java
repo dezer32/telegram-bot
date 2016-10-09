@@ -36,6 +36,13 @@ public class WorkDB {
         return queryFactory.select(qCurrency.id).from(qCurrency).where(qCurrency.nameCurrency.eq(nameCurrency)).fetchOne();
     }
 
+    /**
+     * @TODO
+     * Методы DB не должны возвращать объект Tuple. Это внутреннее представление строки из таблицы БД.
+     * В этом методе нужно использовать select(Projections.constructor(Clazz.class, <поля>)
+     *
+     * @return
+     */
     public List<Tuple> getIdCur() {
         QCurrency qCurrency = QCurrency.currency;
         return queryFactory.select(qCurrency.all()).from(qCurrency).fetch();
@@ -96,6 +103,7 @@ public class WorkDB {
                         value, date)
                 .execute();
     }
+
     //del method
     public void updateCurrencyRate(String curFrom, String curTo, double value, String date) {
         QExchange qExchange = QExchange.exchange;
