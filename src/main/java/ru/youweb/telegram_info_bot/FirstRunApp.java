@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+//@TODO Все манипуляции с датами перевести на java.time.* API, подробнее http://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html
+//Для представления только даты использовать класс LocalDate, для представления временного периода(например 5 часов) использовать класс Duration
 public class FirstRunApp {
     WorkDB workDB;
     FixerApi fixerApi;

@@ -6,8 +6,10 @@ import ru.youweb.telegram_info_bot.currency.dto.CurrencyRate;
 
 import java.util.concurrent.ExecutionException;
 
+//@TODO все поля пометить private
 public class FixerApi {
 
+    //@TODO Удалить Request отсюда
     Request request;
 
     AsyncHttpClient asyncHttpClient;
@@ -22,6 +24,7 @@ public class FixerApi {
     }
 
     public CurrencyRate getCurrencyRate(String currency, String date) throws ExecutionException, InterruptedException {
+        //@TODO Добавить Request сюда
         request = new RequestBuilder()
         .setUrl(urlFixer + "/" + date)
         .addQueryParam("base", currency)
@@ -38,6 +41,7 @@ public class FixerApi {
     }
 
     public CurrencyRate getCurrencyRate(String currency) throws ExecutionException, InterruptedException {
+        //@TODO Добавить Request сюда
         request = new RequestBuilder()
                 .setUrl(urlFixer + "/latest")
                 .addQueryParam("base", currency)

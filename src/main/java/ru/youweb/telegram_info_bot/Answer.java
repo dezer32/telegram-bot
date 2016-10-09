@@ -7,7 +7,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+//@TODO Все поля пометить private
 public class Answer {
+
     private String command;
 
     private List<String> currency = new ArrayList<String>();

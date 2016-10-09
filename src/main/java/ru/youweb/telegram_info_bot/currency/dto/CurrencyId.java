@@ -1,6 +1,7 @@
 package ru.youweb.telegram_info_bot.currency.dto;
 
 public class CurrencyId {
+
     private int id;
 
     private String nameCurrency;

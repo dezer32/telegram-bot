@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+//@TODO все свойства поментить private
+//@TODO работу с датами перевести на java.time.*
 public class SchedulerTask extends TimerTask {
 
     FixerApi fixerApi;
@@ -21,6 +23,7 @@ public class SchedulerTask extends TimerTask {
 
     String date;
 
+    //@TODO Удалить AllCurrencyId переписать код без использования этого класса
     public SchedulerTask(FixerApi fixerApi, WorkDB workDB, AllCurrencyId allCurrencyId) {
         this.fixerApi = fixerApi;
         this.workDB = workDB;

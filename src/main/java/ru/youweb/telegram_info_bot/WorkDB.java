@@ -9,6 +9,12 @@ import ru.youweb.jdbc.QUser;
 
 import java.util.List;
 
+//@TODO Удалить неиспользуемые методы
+//@TODO Этот класс слишком сложный, это подтверждается наличием методов со сложными названиями (addUser, addCurrencyRate),
+//нужно разбить его на несколько более мелких классов которые будут заниматься только своей работой, например
+//UserDb(или UserDao, UserDbHelper, или любое другое), CurrencyDb и т.д.
+//В этих классах сделать методы insert/update/delete/find
+//Дополнительные классы поместить в пакет ru.youweb.telegram_info_bot.db
 public class WorkDB {
 
     private SQLQueryFactory queryFactory;

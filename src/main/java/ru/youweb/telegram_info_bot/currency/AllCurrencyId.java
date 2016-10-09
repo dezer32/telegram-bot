@@ -8,6 +8,7 @@ import ru.youweb.telegram_info_bot.currency.dto.CurrencyId;
 import java.util.ArrayList;
 import java.util.List;
 
+//@TODO Перепеши весь код не используя этот класс
 public class AllCurrencyId {
 
     private List<CurrencyId> currencyIdList = new ArrayList<CurrencyId>();
