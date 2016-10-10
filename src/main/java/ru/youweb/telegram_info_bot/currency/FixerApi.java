@@ -4,31 +4,31 @@ import com.google.gson.Gson;
 import org.asynchttpclient.*;
 import ru.youweb.telegram_info_bot.currency.dto.CurrencyRate;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ExecutionException;
 
-//@TODO все поля пометить private
 public class FixerApi {
 
-    //@TODO Удалить Request отсюда
-    Request request;
+    private AsyncHttpClient asyncHttpClient;
 
-    AsyncHttpClient asyncHttpClient;
+    private Gson gson;
 
-    Gson gson;
+    DateTimeFormatter format;
 
-    String urlFixer = "http://api.fixer.io";
+    private String urlFixer = "http://api.fixer.io";
 
-    public FixerApi(AsyncHttpClient asyncHttpClient, Gson gson) {
+    public FixerApi(AsyncHttpClient asyncHttpClient, Gson gson, DateTimeFormatter format) {
         this.asyncHttpClient = asyncHttpClient;
         this.gson = gson;
+        this.format = format;
     }
 
-    public CurrencyRate getCurrencyRate(String currency, String date) throws ExecutionException, InterruptedException {
-        //@TODO Добавить Request сюда
-        request = new RequestBuilder()
-        .setUrl(urlFixer + "/" + date)
-        .addQueryParam("base", currency)
-        .build();
+    public CurrencyRate getCurrencyRate(String currency, LocalDate date) throws ExecutionException, InterruptedException {
+        Request request = new RequestBuilder()
+                .setUrl(urlFixer + "/" + date.format(format))
+                .addQueryParam("base", currency)
+                .build();
 
         System.out.println("load currency");
 
@@ -41,8 +41,7 @@ public class FixerApi {
     }
 
     public CurrencyRate getCurrencyRate(String currency) throws ExecutionException, InterruptedException {
-        //@TODO Добавить Request сюда
-        request = new RequestBuilder()
+        Request request = new RequestBuilder()
                 .setUrl(urlFixer + "/latest")
                 .addQueryParam("base", currency)
                 .build();

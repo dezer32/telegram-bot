@@ -1,27 +1,19 @@
 package ru.youweb.telegram_info_bot;
 
-//@TODO Удалить неиспользуемый импорт
-
 import com.google.gson.Gson;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.DefaultAsyncHttpClient;
-import ru.youweb.telegram_info_bot.currency.AllCurrencyId;
 import ru.youweb.telegram_info_bot.currency.FixerApi;
 import ru.youweb.telegram_info_bot.telegram.TelegramApi;
 import ru.youweb.telegram_info_bot.telegram.dto.TelegramMessage;
 
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Timer;
 import java.util.concurrent.ExecutionException;
 
-//@TODO Удалить ненужные комментарии(во всех классах)
-
-/**
- * Hello world!
- */
 public class App {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
@@ -32,20 +24,17 @@ public class App {
 
         Config config = ConfigFactory.load();
 
-        WorkDB workDB = new WorkDB(config.getString("db.jdbcUrl"), config.getString("db.user"), config.getString("db.pass"));
+        WorkDB workDB = new WorkDB(config.getConfig("db"));
 
         TelegramApi tApi = new TelegramApi(config.getString("urlBot"), asyncHttpClient, gson);
 
-        FixerApi fApi = new FixerApi(asyncHttpClient, gson);
+        FixerApi fApi = new FixerApi(asyncHttpClient, gson, DateTimeFormatter.ofPattern(config.getString("dateFormatApi")));
 
-        AllCurrencyId currencyId = new AllCurrencyId(workDB);
-
-        FirstRunApp firstRunApp = new FirstRunApp(workDB, fApi, currencyId);
+        new FirstRunApp(workDB, fApi, config);
 
         Timer timer = new Timer();
 
-
-        SchedulerTask st = new SchedulerTask(fApi, workDB, currencyId);
+        SchedulerTask st = new SchedulerTask(fApi, workDB, DateTimeFormatter.ofPattern(config.getString("db.dateFromat")));
 
         long timeScheduleStart = config.getLong("timer.scheduleStart");
         long timeSchedulePeriod = config.getLong("timer.schedulePeriod");
@@ -55,7 +44,7 @@ public class App {
 
         timer.schedule(st, new Date(timeScheduleStart), timeSchedulePeriod);
 
-        Answer answer = new Answer(workDB, currencyId);
+        Answer answer = new Answer(workDB);
 
         while (true) {
             for (TelegramMessage message : tApi.update()) {

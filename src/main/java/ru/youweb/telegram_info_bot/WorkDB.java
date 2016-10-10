@@ -1,13 +1,18 @@
 package ru.youweb.telegram_info_bot;
 
-import com.querydsl.core.Tuple;
 import com.querydsl.sql.*;
+import com.typesafe.config.Config;
 import com.zaxxer.hikari.HikariDataSource;
 import ru.youweb.jdbc.QCurrency;
 import ru.youweb.jdbc.QExchange;
 import ru.youweb.jdbc.QUser;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 //@TODO Удалить неиспользуемые методы
 //@TODO Этот класс слишком сложный, это подтверждается наличием методов со сложными названиями (addUser, addCurrencyRate),
@@ -19,21 +24,22 @@ public class WorkDB {
 
     private SQLQueryFactory queryFactory;
 
-    public WorkDB(String jdbcUrl, String user, String pass) {
+    private Map<String, Integer> currencyId = new HashMap<String, Integer>();
+
+    private Config confAppDb;
+
+    public WorkDB(Config confAppDb) {
+        this.confAppDb = confAppDb;
         HikariDataSource ds = new HikariDataSource();
-        ds.setJdbcUrl(jdbcUrl);
-        ds.setUsername(user);
-        ds.setPassword(pass);
+        ds.setJdbcUrl(confAppDb.getString("jdbcUrl"));
+        ds.setUsername(confAppDb.getString("user"));
+        ds.setPassword(confAppDb.getString("pass"));
 
         SQLTemplates templates = new H2Templates();
-        Configuration config = new Configuration(templates);
-        queryFactory = new SQLQueryFactory(config, ds);
-    }
-
-    //Избавиться от нижнего метода
-    private int getIdCur(String nameCurrency) {
-        QCurrency qCurrency = QCurrency.currency;
-        return queryFactory.select(qCurrency.id).from(qCurrency).where(qCurrency.nameCurrency.eq(nameCurrency)).fetchOne();
+        Configuration configDb = new Configuration(templates);
+        queryFactory = new SQLQueryFactory(configDb, ds);
+        queryFactory = new SQLQueryFactory(configDb, ds);
+        queryFactory = new SQLQueryFactory(configDb, ds);
     }
 
     /**
@@ -43,9 +49,16 @@ public class WorkDB {
      *
      * @return
      */
-    public List<Tuple> getIdCur() {
-        QCurrency qCurrency = QCurrency.currency;
-        return queryFactory.select(qCurrency.all()).from(qCurrency).fetch();
+
+    private int getIdCur(String currency) {
+        if (!currencyId.containsKey(currency)) {
+            currencyId.put(currency, addCurrency(currency));
+        }
+        return currencyId.get(currency);
+    }
+
+    public List<String> getAllCurrency(){
+        return currencyId.entrySet().stream().map(e -> e.getKey()).collect(Collectors.toList());
     }
 
     public void addUser(int id, String userName) {
@@ -59,7 +72,6 @@ public class WorkDB {
             queryFactory.insert(qUser).columns(qUser.telegramId, qUser.name).values(id, userName).execute();
     }
 
-    //delete method
     public double getAnswer(String curFrom, String curTo, String date) {
         QExchange qExchange = QExchange.exchange;
 
@@ -72,39 +84,16 @@ public class WorkDB {
                 .fetchOne();
     }
 
-    public double getAnswer(int curFrom, int curTo, String date) {
-        QExchange qExchange = QExchange.exchange;
-
-        return queryFactory
-                .select(qExchange.value)
-                .from(qExchange)
-                .where(qExchange.idCurFrom.eq(curFrom)
-                        .and(qExchange.idCurTo.eq(curTo))
-                        .and(qExchange.date.eq(date)))
-                .fetchOne();
-    }
-
-    public void addCurrencyRate(String curFrom, String curTo, double value, String date) {
+    public void addCurrencyRate(String curFrom, String curTo, double value, LocalDate date) {
         QExchange qExchange = QExchange.exchange;
         queryFactory.insert(qExchange)
                 .columns(qExchange.idCurFrom, qExchange.idCurTo, qExchange.value, qExchange.date)
                 .values(getIdCur(curFrom),
                         getIdCur(curTo),
-                        value, date)
+                        value, date.format(DateTimeFormatter.ofPattern(confAppDb.getString("dateFromat"))))
                 .execute();
     }
 
-    public void addCurrencyRate(int curFrom, int curTo, double value, String date) {
-        QExchange qExchange = QExchange.exchange;
-        queryFactory.insert(qExchange)
-                .columns(qExchange.idCurFrom, qExchange.idCurTo, qExchange.value, qExchange.date)
-                .values(curFrom,
-                        curTo,
-                        value, date)
-                .execute();
-    }
-
-    //del method
     public void updateCurrencyRate(String curFrom, String curTo, double value, String date) {
         QExchange qExchange = QExchange.exchange;
         queryFactory.update(qExchange)
@@ -115,25 +104,22 @@ public class WorkDB {
                 .execute();
     }
 
-    public void updateCurrencyRate(int curFrom, int curTo, double value, String date) {
-        QExchange qExchange = QExchange.exchange;
-        queryFactory.update(qExchange)
-                .where(qExchange.idCurFrom.eq(curFrom)
-                        .and(qExchange.idCurTo.eq(curTo))
-                        .and(qExchange.date.eq(date)))
-                .set(qExchange.value, value)
-                .execute();
+    public int addCurrency(String currency) {
+        QCurrency qCurrency = QCurrency.currency;
+        int findId = findCurrency(currency);
+        if (findId > 0) {
+            return queryFactory.insert(qCurrency).columns(qCurrency.nameCurrency).values(currency).executeWithKey(Integer.class);
+        }
+        return findId;
     }
 
-    public void addCurrency(String currency) {
+    private int findCurrency(String currency) {
         QCurrency qCurrency = QCurrency.currency;
-        long count = queryFactory
+
+        return queryFactory
                 .select(qCurrency.id)
                 .from(qCurrency)
                 .where(qCurrency.nameCurrency.eq(currency))
-                .fetchCount();
-        if (count == 0) {
-            queryFactory.insert(qCurrency).columns(qCurrency.nameCurrency).values(currency).execute();
-        }
+                .fetchOne();
     }
 }

@@ -1,42 +1,40 @@
 package ru.youweb.telegram_info_bot;
 
-import ru.youweb.telegram_info_bot.currency.AllCurrencyId;
 import ru.youweb.telegram_info_bot.currency.FixerApi;
 import ru.youweb.telegram_info_bot.currency.dto.CurrencyRate;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 
-//@TODO все свойства поментить private
-//@TODO работу с датами перевести на java.time.*
 public class SchedulerTask extends TimerTask {
 
-    FixerApi fixerApi;
+    private FixerApi fixerApi;
 
-    WorkDB workDB;
+    private WorkDB workDB;
 
-    AllCurrencyId currencyId;
+    private CurrencyRate currencyRate;
 
-    CurrencyRate currencyRate;
+    private LocalDate date;
 
-    String date;
+    private DateTimeFormatter format;
 
-    //@TODO Удалить AllCurrencyId переписать код без использования этого класса
-    public SchedulerTask(FixerApi fixerApi, WorkDB workDB, AllCurrencyId allCurrencyId) {
+    public SchedulerTask(FixerApi fixerApi, WorkDB workDB, DateTimeFormatter format) {
         this.fixerApi = fixerApi;
         this.workDB = workDB;
-        this.currencyId = allCurrencyId;
+        this.format = format;
     }
 
     public void run() {
-        date = new SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis());
-        for (String cur : currencyId.getAllNameCurrency()) {
+        date = LocalDate.now();
+
+        for (String cur : workDB.getAllCurrency()) {
             try {
                 currencyRate = fixerApi.getCurrencyRate(cur);
                 for (Map.Entry<String, Double> rate : currencyRate.getRates().entrySet()) {
-                    workDB.updateCurrencyRate(currencyId.getId(currencyRate.getBase()), currencyId.getId(rate.getKey()), rate.getValue(), date);
+                    workDB.updateCurrencyRate(currencyRate.getBase(), rate.getKey(), rate.getValue(), date.format(format));
                 }
             } catch (Exception e) {
                 e.printStackTrace();

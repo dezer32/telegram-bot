@@ -10,17 +10,15 @@ public class CurrencyRate {
 
     private Map<String, Double> rates;
 
-    //@TODO Удалить пустой конструктор, Java и так его создаст при компиляции
-    //@TODO мы пишем { в конце строки, а не в начале следующей
-    public CurrencyRate() {
-
-    }
-
     public String getBase() {
         return base;
     }
 
     public Map<String, Double> getRates() {
         return rates;
+    }
+
+    public boolean isEmpty() {
+        return rates == null || rates.size() == 0;
     }
 }

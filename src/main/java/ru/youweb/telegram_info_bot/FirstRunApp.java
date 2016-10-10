@@ -1,64 +1,39 @@
 package ru.youweb.telegram_info_bot;
 
-import ru.youweb.telegram_info_bot.currency.AllCurrencyId;
+import com.typesafe.config.Config;
 import ru.youweb.telegram_info_bot.currency.dto.CurrencyRate;
 import ru.youweb.telegram_info_bot.currency.FixerApi;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-//@TODO Все манипуляции с датами перевести на java.time.* API, подробнее http://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html
-//Для представления только даты использовать класс LocalDate, для представления временного периода(например 5 часов) использовать класс Duration
 public class FirstRunApp {
-    WorkDB workDB;
-    FixerApi fixerApi;
 
-    public FirstRunApp(WorkDB workDB, FixerApi fixerApi, AllCurrencyId currencyId) throws ExecutionException, InterruptedException {
-        this.workDB = workDB;
-        this.fixerApi = fixerApi;
+    public FirstRunApp(WorkDB workDB, FixerApi fixerApi, Config config) throws ExecutionException, InterruptedException {
 
-        CurrencyRate currency = fixerApi.getCurrencyRate("USD", "latest");
-        workDB.addCurrency(currency.getBase());
-        for (Map.Entry<String, Double> item : currency.getRates().entrySet())
-            workDB.addCurrency(item.getKey());
+        LocalDate dateParse = LocalDate.parse(config.getString("firstRun.date"));
 
-        currencyId.load();
-
-        long timeStamp = 946674000000l;
-
-        Calendar calendar = new GregorianCalendar();
-
-        calendar.setTimeInMillis(timeStamp);
-
-        String date;
-
-        String dateDb;
+        Duration duration = Duration.parse(config.getString("firstRun.period"));
 
         CurrencyRate currencyRate;
 
-        while (calendar.getTimeInMillis() < System.currentTimeMillis()) {
-            date = new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTimeInMillis());
-            dateDb = new SimpleDateFormat("yyyyMMdd").format(calendar.getTimeInMillis());
-
-            System.out.println("date add " + date);
-
-            for (Map.Entry<String, Double> item : currency.getRates().entrySet()) {
-                TimeUnit.MILLISECONDS.sleep(10);
-                currencyRate = fixerApi.getCurrencyRate(item.getKey(), date);
-                try {
+        while (dateParse.isBefore(LocalDate.now())) {
+            for (String currency: workDB.getAllCurrency()) {
+                currencyRate = fixerApi.getCurrencyRate(currency, dateParse);
+                if (!currencyRate.isEmpty()) {
                     for (Map.Entry<String, Double> rates : currencyRate.getRates().entrySet()) {
-                        workDB.addCurrencyRate(currencyId.getId(currencyRate.getBase()), currencyId.getId(rates.getKey()), rates.getValue(), dateDb);
-                        System.out.println("add " + currencyId.getId(currencyRate.getBase()) + " " + currencyId.getId(rates.getKey()) + " " + rates.getValue());
+                        workDB.addCurrencyRate(currencyRate.getBase(), rates.getKey(), rates.getValue(), dateParse);
                     }
-                } catch (NullPointerException e) {
                 }
             }
-            System.out.println("next iteration");
-            calendar.setTimeInMillis(calendar.getTimeInMillis() + 86400000l);
+            dateParse.plusDays(duration.toDays());
         }
     }
 }

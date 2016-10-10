@@ -1,13 +1,9 @@
 package ru.youweb.telegram_info_bot;
 
-import ru.youweb.telegram_info_bot.currency.AllCurrencyId;
-import ru.youweb.telegram_info_bot.currency.dto.CurrencyId;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-//@TODO Все поля пометить private
 public class Answer {
 
     private String command;
@@ -20,23 +16,25 @@ public class Answer {
 
     private String val = "";
 
-    int error = 0;
     /**
      * 0 = Все круто
      * 1 = Некоректный формат запроса
      * 2 = Неверный формат даты
      * 3 = Повторяющиеся валюты
      */
+    private int error = 0;
 
-    WorkDB workDB;
+    private WorkDB workDB;
 
-    AllCurrencyId currencyId;
-
-    public Answer(WorkDB workDB, AllCurrencyId currencyId) {
+    public Answer(WorkDB workDB) {
         this.workDB = workDB;
-        this.currencyId = currencyId;
     }
 
+    /**
+     * Читает сообщение и готовит ответ
+     * @param mess сообщение от пользователя
+     * @return возвращает подготовленный ответ, который годится для отправки пользователю
+     */
     public String message(String mess) {
         currency.clear();
         error = 0;
@@ -55,10 +53,10 @@ public class Answer {
             val = "";
             val += currency.get(0) + "\n";
             val += new SimpleDateFormat("yyyy-MM-dd").format(date.getTimeInMillis()) + "\n";
-            for (String cur : (currency.size() > 1 ? currency : currencyId.getAllNameCurrency())) {
+            for (String cur : (currency.size() > 1 ? currency : workDB.getAllCurrency())) {
                 if (cur != currency.get(0)) {
                     try {
-                        val += cur + "=" + workDB.getAnswer(currencyId.getId(currency.get(0)), currencyId.getId(cur), new SimpleDateFormat("yyyyMMdd").format(date.getTimeInMillis())) + "\n";
+                        val += cur + "=" + workDB.getAnswer(currency.get(0), cur, new SimpleDateFormat("yyyyMMdd").format(date.getTimeInMillis())) + "\n";
                     } catch (NullPointerException e) {
 
                     }
@@ -79,6 +77,20 @@ public class Answer {
         return "Некорректные параметры запроса, введите /h для справки";
     }
 
+
+
+    public String getCommand() {
+        return command;
+    }
+
+    public List<String> getCurrency() {
+        return currency;
+    }
+
+    public Calendar getDate() {
+        return date;
+    }
+
     private void parse(String mess) {
         command = mess.split(" ")[0];
         if (!command.equals("/h"))
@@ -93,34 +105,30 @@ public class Answer {
         if (isInt(String.valueOf(valueMess.charAt(0)))) {
             if (valueMess.length() == 8 && isInt(valueMess)) {
                 try {
-                    date.setTime(sdf.parse(valueMess.toString()));
+                    date.setTime(sdf.parse(valueMess));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                return;
             } else {
                 error = 2;
-                return;
             }
         } else {
             if (valueMess.length() >= 3) {
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < 3; i++) {
                     val += String.valueOf(valueMess.charAt(i));
+                }
                 if (currency.contains(val)) {
                     error = 3;
-                    return;
                 } else {
                     currency.add(val);
                     val = "";
                     valueMess = valueMess.substring(3);
-                    if (valueMess.length() > 2)
+                    if (valueMess.length() > 2) {
                         parseValue(valueMess);
-                    else
-                        return;
+                    }
                 }
             } else {
                 error = 1;
-                return;
             }
         }
     }
@@ -142,17 +150,5 @@ public class Answer {
             return copy;
         }
         return symbols;
-    }
-
-    public String getCommand() {
-        return command;
-    }
-
-    public List<String> getCurrency() {
-        return currency;
-    }
-
-    public Calendar getDate() {
-        return date;
     }
 }
