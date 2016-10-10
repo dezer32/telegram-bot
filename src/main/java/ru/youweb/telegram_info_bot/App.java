@@ -6,6 +6,7 @@ import com.typesafe.config.ConfigFactory;
 import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.DefaultAsyncHttpClient;
 import ru.youweb.telegram_info_bot.currency.FixerApi;
+import ru.youweb.telegram_info_bot.db.WorkDB;
 import ru.youweb.telegram_info_bot.telegram.TelegramApi;
 import ru.youweb.telegram_info_bot.telegram.dto.TelegramMessage;
 
@@ -48,7 +49,7 @@ public class App {
 
         while (true) {
             for (TelegramMessage message : tApi.update()) {
-                workDB.addUser(message.getFrom().getId(), message.getFrom().getFirstName() + " " + message.getFrom().getLastName());
+                workDB.UserDb().addUser(message.getFrom().getId(), message.getFrom().getFirstName() + " " + message.getFrom().getLastName());
                 tApi.sendAnswer(message.getFrom().getId(), answer.message(message.getText()));
             }
         }

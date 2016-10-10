@@ -2,8 +2,8 @@ package ru.youweb.telegram_info_bot;
 
 import ru.youweb.telegram_info_bot.currency.FixerApi;
 import ru.youweb.telegram_info_bot.currency.dto.CurrencyRate;
+import ru.youweb.telegram_info_bot.db.WorkDB;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
@@ -30,11 +30,11 @@ public class SchedulerTask extends TimerTask {
     public void run() {
         date = LocalDate.now();
 
-        for (String cur : workDB.getAllCurrency()) {
+        for (String cur : workDB.CurrencyDb().getAllCurrency()) {
             try {
                 currencyRate = fixerApi.getCurrencyRate(cur);
                 for (Map.Entry<String, Double> rate : currencyRate.getRates().entrySet()) {
-                    workDB.updateCurrencyRate(currencyRate.getBase(), rate.getKey(), rate.getValue(), date.format(format));
+                    workDB.CurrencyRateDb().updateCurrencyRate(currencyRate.getBase(), rate.getKey(), rate.getValue(), date.format(format));
                 }
             } catch (Exception e) {
                 e.printStackTrace();

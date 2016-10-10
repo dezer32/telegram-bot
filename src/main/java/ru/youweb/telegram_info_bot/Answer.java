@@ -1,5 +1,7 @@
 package ru.youweb.telegram_info_bot;
 
+import ru.youweb.telegram_info_bot.db.WorkDB;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -53,10 +55,10 @@ public class Answer {
             val = "";
             val += currency.get(0) + "\n";
             val += new SimpleDateFormat("yyyy-MM-dd").format(date.getTimeInMillis()) + "\n";
-            for (String cur : (currency.size() > 1 ? currency : workDB.getAllCurrency())) {
+            for (String cur : (currency.size() > 1 ? currency : workDB.CurrencyDb().getAllCurrency())) {
                 if (cur != currency.get(0)) {
                     try {
-                        val += cur + "=" + workDB.getAnswer(currency.get(0), cur, new SimpleDateFormat("yyyyMMdd").format(date.getTimeInMillis())) + "\n";
+                        val += cur + "=" + workDB.CurrencyRateDb().getAnswer(currency.get(0), cur, new SimpleDateFormat("yyyyMMdd").format(date.getTimeInMillis())) + "\n";
                     } catch (NullPointerException e) {
 
                     }
