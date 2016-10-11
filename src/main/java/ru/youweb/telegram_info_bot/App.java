@@ -17,6 +17,8 @@ import ru.youweb.telegram_info_bot.db.UserDb;
 import ru.youweb.telegram_info_bot.telegram.TelegramApi;
 import ru.youweb.telegram_info_bot.telegram.dto.TelegramMessage;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Timer;
@@ -34,7 +36,7 @@ public class App {
 
         TelegramApi tApi = new TelegramApi(config.getString("urlBot"), asyncHttpClient, gson);
 
-        FixerApi fApi = new FixerApi(asyncHttpClient, gson, DateTimeFormatter.ofPattern(config.getString("dateFormatApi")));
+        FixerApi fApi = new FixerApi(asyncHttpClient, gson, config);
 
         HikariDataSource ds = new HikariDataSource();
         ds.setJdbcUrl(config.getString("jdbcUrl"));
@@ -52,21 +54,20 @@ public class App {
         new FirstRunApp(currencyRateDb, currencyDb, fApi, config);
 
         Timer timer = new Timer();
+        SchedulerTask st = new SchedulerTask(fApi, currencyRateDb, currencyDb, config);
 
-        SchedulerTask st = new SchedulerTask(fApi, currencyRateDb, currencyDb, DateTimeFormatter.ofPattern(config.getString("db.dateFromat")));
+        LocalDate scheduleStart = LocalDate.parse(config.getString("timer.scheduleStart"));
+        Duration duration = Duration.parse(config.getString("timer.schedulePeriod"));
 
-        long timeScheduleStart = config.getLong("timer.scheduleStart");
-        long timeSchedulePeriod = config.getLong("timer.schedulePeriod");
+        while (scheduleStart.isBefore(LocalDate.now()))
+            scheduleStart.plusDays(duration.toDays());
 
-        while (timeScheduleStart < System.currentTimeMillis())
-            timeScheduleStart += timeSchedulePeriod;
-
-        timer.schedule(st, new Date(timeScheduleStart), timeSchedulePeriod);
+        timer.schedule(st, new Date(scheduleStart.atStartOfDay().getSecond()), duration.toMillis());
 
         Answer answer = new Answer(currencyRateDb, currencyDb);
         while (true) {
             for (TelegramMessage message : tApi.update()) {
-                userDb.addUser(message.getFrom().getId(), message.getFrom().getFirstName() + " " + message.getFrom().getLastName());
+                userDb.add(message.getFrom().getId(), message.getFrom().getFirstName() + " " + message.getFrom().getLastName());
                 tApi.sendAnswer(message.getFrom().getId(), answer.message(message.getText()));
             }
         }

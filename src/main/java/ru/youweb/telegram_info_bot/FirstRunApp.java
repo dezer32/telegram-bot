@@ -20,23 +20,20 @@ public class FirstRunApp {
         CurrencyRate currencyRate = fixerApi.getCurrencyRate("USD");
         if (!currencyRate.isEmpty()) {
             for (Map.Entry<String, Double> rates : currencyRate.getRates().entrySet()) {
-                currencyRateDb.addCurrencyRate(currencyRate.getBase(), rates.getKey(), rates.getValue(), dateParse);
+                currencyRateDb.add(currencyRate.getBase(), rates.getKey(), rates.getValue(), dateParse);
             }
         }
 
-        //@TODO переделать while в for, LocalDate.now() будет вызываться на каждой итерации, лучше вынести в переменную end, например
-        // for (end = LocalDate.now(); dateParse.isBefore(end); end = end.plusDays(1))
-        while (dateParse.isBefore(LocalDate.now())) {
+        for (LocalDate end = LocalDate.now(); dateParse.isBefore(end); dateParse.plusDays(duration.toDays())) {
             for (String currency : currencyDb.getAllCurrency()) {
                 currencyRate = fixerApi.getCurrencyRate(currency, dateParse);
                 if (!currencyRate.isEmpty()) {
                     for (Map.Entry<String, Double> rates : currencyRate.getRates().entrySet()) {
-                        currencyRateDb.addCurrencyRate(currencyRate.getBase(), rates.getKey(), rates.getValue(), dateParse);
+                        currencyRateDb.add(currencyRate.getBase(), rates.getKey(), rates.getValue(), dateParse);
                     }
                 }
             }
             TimeUnit.MILLISECONDS.sleep(10);
-            dateParse.plusDays(duration.toDays());
         }
     }
 }

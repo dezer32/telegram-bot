@@ -11,18 +11,18 @@ public class UserDb {
         this.queryFactory = queryFactory;
     }
 
-    //@TODO переименовать в add или insert или create
-    //@TODO параметр id переименовать в telegramId иначе путаешь с нашим id
-    //@TODO в фабрике есть метод .merge которые делает вначале select а потом insert(или update) может использовать его вместо
-    //@TODO select/insert
-    public void addUser(int id, String userName) {
+    public void add(int telegramId, String userName) {
         QUser qUser = QUser.user;
-        long countUser = queryFactory
+        if (findUser(telegramId))
+            queryFactory.insert(qUser).columns(qUser.telegramId, qUser.name).values(telegramId, userName).execute();
+    }
+
+    private boolean findUser(Integer telegramId) {
+        QUser qUser = QUser.user;
+        return queryFactory
                 .select(qUser.id)
                 .from(qUser)
-                .where(qUser.telegramId.eq(String.valueOf(id)))
-                .fetchCount();
-        if (countUser == 0)
-            queryFactory.insert(qUser).columns(qUser.telegramId, qUser.name).values(id, userName).execute();
+                .where(qUser.telegramId.eq(String.valueOf(telegramId)))
+                .fetchCount() == 0;
     }
 }

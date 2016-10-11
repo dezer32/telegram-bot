@@ -63,7 +63,7 @@ public class Answer {
             for (String cur : (currency.size() > 1 ? currency : currencyDb.getAllCurrency())) {
                 if (cur != currency.get(0)) {
                     try {
-                        val += cur + "=" + currencyRateDb.getAnswer(currency.get(0), cur, new SimpleDateFormat("yyyyMMdd").format(date.getTimeInMillis())) + "\n";
+                        val += cur + "=" + currencyRateDb.findValue(currency.get(0), cur, new SimpleDateFormat("yyyyMMdd").format(date.getTimeInMillis())) + "\n";
                     } catch (NullPointerException e) {
 
                     }

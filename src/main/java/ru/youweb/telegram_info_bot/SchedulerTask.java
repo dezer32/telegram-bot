@@ -1,5 +1,6 @@
 package ru.youweb.telegram_info_bot;
 
+import com.typesafe.config.Config;
 import ru.youweb.telegram_info_bot.currency.FixerApi;
 import ru.youweb.telegram_info_bot.currency.dto.CurrencyRate;
 import ru.youweb.telegram_info_bot.db.CurrencyDb;
@@ -24,12 +25,12 @@ public class SchedulerTask extends TimerTask {
 
     private DateTimeFormatter format;
 
-    //@TODO Передавать Config как третий параметр, DateTimeFormatter создавать в конструкторе
-    public SchedulerTask(FixerApi fixerApi, CurrencyRateDb currencyRateDb, CurrencyDb currencyDb, DateTimeFormatter format) {
+
+    public SchedulerTask(FixerApi fixerApi, CurrencyRateDb currencyRateDb, CurrencyDb currencyDb, Config config) {
         this.fixerApi = fixerApi;
         this.currencyRateDb = currencyRateDb;
         this.currencyDb = currencyDb;
-        this.format = format;
+        this.format = DateTimeFormatter.ofPattern(config.getString("db.dateFormat"));
     }
 
     public void run() {
@@ -39,7 +40,7 @@ public class SchedulerTask extends TimerTask {
             try {
                 currencyRate = fixerApi.getCurrencyRate(cur);
                 for (Map.Entry<String, Double> rate : currencyRate.getRates().entrySet()) {
-                    currencyRateDb.updateCurrencyRate(currencyRate.getBase(), rate.getKey(), rate.getValue(), date.format(format));
+                    currencyRateDb.update(currencyRate.getBase(), rate.getKey(), rate.getValue(), date.format(format));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
