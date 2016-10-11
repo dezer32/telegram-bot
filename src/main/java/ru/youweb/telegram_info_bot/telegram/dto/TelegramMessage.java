@@ -13,11 +13,31 @@ public class TelegramMessage {
         return messageId;
     }
 
+    public void setMessageId(int messageId) {
+        this.messageId = messageId;
+    }
+
+    public int getDate() {
+        return date;
+    }
+
+    public void setDate(int date) {
+        this.date = date;
+    }
+
     public String getText() {
         return text;
     }
 
+    public void setText(String text) {
+        this.text = text;
+    }
+
     public TelegramAuthorInfo getFrom() {
         return from;
+    }
+
+    public void setFrom(TelegramAuthorInfo from) {
+        this.from = from;
     }
 }

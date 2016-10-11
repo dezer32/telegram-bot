@@ -11,6 +11,10 @@ public class UserDb {
         this.queryFactory = queryFactory;
     }
 
+    //@TODO переименовать в add или insert или create
+    //@TODO параметр id переименовать в telegramId иначе путаешь с нашим id
+    //@TODO в фабрике есть метод .merge которые делает вначале select а потом insert(или update) может использовать его вместо
+    //@TODO select/insert
     public void addUser(int id, String userName) {
         QUser qUser = QUser.user;
         long countUser = queryFactory

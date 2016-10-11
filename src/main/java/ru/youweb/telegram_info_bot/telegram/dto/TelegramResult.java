@@ -11,7 +11,15 @@ public class TelegramResult {
         return updateId;
     }
 
+    public void setUpdateId(int updateId) {
+        this.updateId = updateId;
+    }
+
     public TelegramMessage getMessage() {
         return message;
+    }
+
+    public void setMessage(TelegramMessage message) {
+        this.message = message;
     }
 }

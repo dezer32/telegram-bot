@@ -1,6 +1,7 @@
 package ru.youweb.telegram_info_bot;
 
-import ru.youweb.telegram_info_bot.db.WorkDB;
+import ru.youweb.telegram_info_bot.db.CurrencyDb;
+import ru.youweb.telegram_info_bot.db.CurrencyRateDb;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,14 +27,18 @@ public class Answer {
      */
     private int error = 0;
 
-    private WorkDB workDB;
+    private final CurrencyRateDb currencyRateDb;
 
-    public Answer(WorkDB workDB) {
-        this.workDB = workDB;
+    private final CurrencyDb currencyDb;
+
+    public Answer(CurrencyRateDb currencyRateDb, CurrencyDb currencyDb) {
+        this.currencyRateDb = currencyRateDb;
+        this.currencyDb = currencyDb;
     }
 
     /**
      * Читает сообщение и готовит ответ
+     *
      * @param mess сообщение от пользователя
      * @return возвращает подготовленный ответ, который годится для отправки пользователю
      */
@@ -55,10 +60,10 @@ public class Answer {
             val = "";
             val += currency.get(0) + "\n";
             val += new SimpleDateFormat("yyyy-MM-dd").format(date.getTimeInMillis()) + "\n";
-            for (String cur : (currency.size() > 1 ? currency : workDB.CurrencyDb().getAllCurrency())) {
+            for (String cur : (currency.size() > 1 ? currency : currencyDb.getAllCurrency())) {
                 if (cur != currency.get(0)) {
                     try {
-                        val += cur + "=" + workDB.CurrencyRateDb().getAnswer(currency.get(0), cur, new SimpleDateFormat("yyyyMMdd").format(date.getTimeInMillis())) + "\n";
+                        val += cur + "=" + currencyRateDb.getAnswer(currency.get(0), cur, new SimpleDateFormat("yyyyMMdd").format(date.getTimeInMillis())) + "\n";
                     } catch (NullPointerException e) {
 
                     }
@@ -78,7 +83,6 @@ public class Answer {
         }
         return "Некорректные параметры запроса, введите /h для справки";
     }
-
 
 
     public String getCommand() {

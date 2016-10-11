@@ -1,12 +1,19 @@
 package ru.youweb.telegram_info_bot;
 
 import com.google.gson.Gson;
+import com.querydsl.sql.Configuration;
+import com.querydsl.sql.H2Templates;
+import com.querydsl.sql.SQLQueryFactory;
+import com.querydsl.sql.SQLTemplates;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import com.zaxxer.hikari.HikariDataSource;
 import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.DefaultAsyncHttpClient;
 import ru.youweb.telegram_info_bot.currency.FixerApi;
-import ru.youweb.telegram_info_bot.db.WorkDB;
+import ru.youweb.telegram_info_bot.db.CurrencyDb;
+import ru.youweb.telegram_info_bot.db.CurrencyRateDb;
+import ru.youweb.telegram_info_bot.db.UserDb;
 import ru.youweb.telegram_info_bot.telegram.TelegramApi;
 import ru.youweb.telegram_info_bot.telegram.dto.TelegramMessage;
 
@@ -25,17 +32,28 @@ public class App {
 
         Config config = ConfigFactory.load();
 
-        WorkDB workDB = new WorkDB(config.getConfig("db"));
-
         TelegramApi tApi = new TelegramApi(config.getString("urlBot"), asyncHttpClient, gson);
 
         FixerApi fApi = new FixerApi(asyncHttpClient, gson, DateTimeFormatter.ofPattern(config.getString("dateFormatApi")));
 
-        new FirstRunApp(workDB, fApi, config);
+        HikariDataSource ds = new HikariDataSource();
+        ds.setJdbcUrl(config.getString("jdbcUrl"));
+        ds.setUsername(config.getString("user"));
+        ds.setPassword(config.getString("pass"));
+
+        SQLTemplates templates = new H2Templates();
+        Configuration configDb = new Configuration(templates);
+        SQLQueryFactory queryFactory = new SQLQueryFactory(configDb, ds);
+
+        UserDb userDb = new UserDb(queryFactory);
+        CurrencyDb currencyDb = new CurrencyDb(queryFactory);
+        CurrencyRateDb currencyRateDb = new CurrencyRateDb(queryFactory, currencyDb, DateTimeFormatter.ofPattern(config.getString("dateFromat")));
+
+        new FirstRunApp(currencyRateDb, currencyDb, fApi, config);
 
         Timer timer = new Timer();
 
-        SchedulerTask st = new SchedulerTask(fApi, workDB, DateTimeFormatter.ofPattern(config.getString("db.dateFromat")));
+        SchedulerTask st = new SchedulerTask(fApi, currencyRateDb, currencyDb, DateTimeFormatter.ofPattern(config.getString("db.dateFromat")));
 
         long timeScheduleStart = config.getLong("timer.scheduleStart");
         long timeSchedulePeriod = config.getLong("timer.schedulePeriod");
@@ -45,11 +63,10 @@ public class App {
 
         timer.schedule(st, new Date(timeScheduleStart), timeSchedulePeriod);
 
-        Answer answer = new Answer(workDB);
-
+        Answer answer = new Answer(currencyRateDb, currencyDb);
         while (true) {
             for (TelegramMessage message : tApi.update()) {
-                workDB.UserDb().addUser(message.getFrom().getId(), message.getFrom().getFirstName() + " " + message.getFrom().getLastName());
+                userDb.addUser(message.getFrom().getId(), message.getFrom().getFirstName() + " " + message.getFrom().getLastName());
                 tApi.sendAnswer(message.getFrom().getId(), answer.message(message.getText()));
             }
         }

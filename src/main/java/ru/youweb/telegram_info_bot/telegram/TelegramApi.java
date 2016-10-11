@@ -55,9 +55,7 @@ public class TelegramApi {
      * @return возвращает список сообщение пользователей
      */
     public List<TelegramMessage> update() throws ExecutionException, InterruptedException {
-        //@TODO listUserMessage создавать тут
         List<TelegramMessage> listUserMessage = new ArrayList<TelegramMessage>();
-
         for (TelegramResult result : getUpdates().getResult()) {
             listUserMessage.add(result.getMessage());
             if (result.getUpdateId() >= updateId)
