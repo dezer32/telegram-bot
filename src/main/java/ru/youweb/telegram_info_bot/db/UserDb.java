@@ -5,6 +5,8 @@ import ru.youweb.jdbc.QUser;
 
 public class UserDb {
 
+    private static final QUser u = QUser.user;
+
     private SQLQueryFactory queryFactory;
 
     public UserDb(SQLQueryFactory queryFactory) {
@@ -12,17 +14,16 @@ public class UserDb {
     }
 
     public void add(int telegramId, String userName) {
-        QUser qUser = QUser.user;
-        if (findUser(telegramId))
-            queryFactory.insert(qUser).columns(qUser.telegramId, qUser.name).values(telegramId, userName).execute();
+        if (findUserId(telegramId) == null) {
+            insert(telegramId, userName);
+        }
     }
 
-    private boolean findUser(Integer telegramId) {
-        QUser qUser = QUser.user;
-        return queryFactory
-                .select(qUser.id)
-                .from(qUser)
-                .where(qUser.telegramId.eq(String.valueOf(telegramId)))
-                .fetchCount() == 0;
+    private Integer insert(int telegramId, String userName) {
+        return queryFactory.insert(u).set(u.telegramId, telegramId).set(u.name, userName).executeWithKey(u.id);
+    }
+
+    private Integer findUserId(int telegramId) {
+        return queryFactory.select(u.id).from(u).where(u.telegramId.eq(telegramId)).fetchOne();
     }
 }

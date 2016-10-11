@@ -4,8 +4,6 @@ import com.typesafe.config.Config;
 import ru.youweb.telegram_info_bot.db.CurrencyDb;
 import ru.youweb.telegram_info_bot.db.CurrencyRateDb;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -65,7 +63,7 @@ public class Answer {
             val = "";
             val += currency.get(0) + "\n";
             val += date.format(format) + "\n";
-            for (String cur : (currency.size() > 1 ? currency : currencyDb.getAllCurrency())) {
+            for (String cur : (currency.size() > 1 ? currency : currencyDb.getAllCurrencies())) {
                 if (cur != currency.get(0)) {
                     try {
                         val += cur + "=" + currencyRateDb.findValue(currency.get(0), cur, date) + "\n";

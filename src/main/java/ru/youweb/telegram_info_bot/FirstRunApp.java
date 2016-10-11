@@ -25,7 +25,7 @@ public class FirstRunApp {
         }
 
         for (LocalDate end = LocalDate.now(); dateParse.isBefore(end); dateParse.plusDays(duration.toDays())) {
-            for (String currency : currencyDb.getAllCurrency()) {
+            for (String currency : currencyDb.getAllCurrencies()) {
                 currencyRate = fixerApi.getCurrencyRate(currency, dateParse);
                 if (!currencyRate.isEmpty()) {
                     for (Map.Entry<String, Double> rates : currencyRate.getRates().entrySet()) {

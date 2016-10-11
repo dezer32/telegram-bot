@@ -42,8 +42,6 @@ public class FixerApi {
                 .addQueryParam("base", currency)
                 .build();
 
-        System.out.println("load currency");
-
         return asyncHttpClient.executeRequest(request, new AsyncCompletionHandler<CurrencyRate>() {
             @Override
             public CurrencyRate onCompleted(Response response) throws Exception {

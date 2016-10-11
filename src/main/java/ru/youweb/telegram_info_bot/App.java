@@ -19,7 +19,6 @@ import ru.youweb.telegram_info_bot.telegram.dto.TelegramMessage;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Timer;
 import java.util.concurrent.ExecutionException;
@@ -49,12 +48,12 @@ public class App {
 
         UserDb userDb = new UserDb(queryFactory);
         CurrencyDb currencyDb = new CurrencyDb(queryFactory);
-        CurrencyRateDb currencyRateDb = new CurrencyRateDb(queryFactory, currencyDb, DateTimeFormatter.ofPattern(config.getString("dateFromat")));
+        CurrencyRateDb currencyRateDb = new CurrencyRateDb(queryFactory, currencyDb);
 
         new FirstRunApp(currencyRateDb, currencyDb, fApi, config);
 
         Timer timer = new Timer();
-        SchedulerTask st = new SchedulerTask(fApi, currencyRateDb, currencyDb, config);
+        SchedulerCurrencyUpdateTask st = new SchedulerCurrencyUpdateTask(fApi, currencyRateDb, currencyDb);
 
         LocalDate scheduleStart = LocalDate.parse(config.getString("timer.scheduleStart"));
         Duration duration = Duration.parse(config.getString("timer.schedulePeriod"));
