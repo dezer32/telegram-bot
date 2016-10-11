@@ -40,7 +40,7 @@ public class SchedulerTask extends TimerTask {
             try {
                 currencyRate = fixerApi.getCurrencyRate(cur);
                 for (Map.Entry<String, Double> rate : currencyRate.getRates().entrySet()) {
-                    currencyRateDb.update(currencyRate.getBase(), rate.getKey(), rate.getValue(), date.format(format));
+                    currencyRateDb.update(currencyRate.getBase(), rate.getKey(), rate.getValue(), date);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

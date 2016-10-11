@@ -64,7 +64,7 @@ public class App {
 
         timer.schedule(st, new Date(scheduleStart.atStartOfDay().getSecond()), duration.toMillis());
 
-        Answer answer = new Answer(currencyRateDb, currencyDb);
+        Answer answer = new Answer(currencyRateDb, currencyDb, config);
         while (true) {
             for (TelegramMessage message : tApi.update()) {
                 userDb.add(message.getFrom().getId(), message.getFrom().getFirstName() + " " + message.getFrom().getLastName());

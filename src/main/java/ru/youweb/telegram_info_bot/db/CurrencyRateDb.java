@@ -3,6 +3,7 @@ package ru.youweb.telegram_info_bot.db;
 import com.querydsl.sql.SQLQueryFactory;
 import ru.youweb.jdbc.QExchange;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -21,14 +22,14 @@ public class CurrencyRateDb {
         this.format = format;
     }
 
-    public Double findValue(String curFrom, String curTo, String date) {
+    public Double findValue(String curFrom, String curTo, LocalDate date) {
         QExchange qExchange = QExchange.exchange;
         return queryFactory
                 .select(qExchange.value)
                 .from(qExchange)
                 .where(qExchange.idCurFrom.eq(currencyDb.getId(curFrom))
                         .and(qExchange.idCurTo.eq(currencyDb.getId(curTo)))
-                        .and(qExchange.date.eq(date)))
+                        .and(qExchange.date.eq(new Date(date.atStartOfDay().getSecond()))))
                 .fetchOne();
     }
 
@@ -42,12 +43,13 @@ public class CurrencyRateDb {
                 .executeWithKey(Integer.class);
     }
 
-    public void update(String curFrom, String curTo, double value, String date) {
+    public void update(String curFrom, String curTo, double value, LocalDate date) {
         QExchange qExchange = QExchange.exchange;
+
         queryFactory.update(qExchange)
                 .where(qExchange.idCurFrom.eq(currencyDb.getId(curFrom))
                         .and(qExchange.idCurTo.eq(currencyDb.getId(curTo)))
-                        .and(qExchange.date.eq(date)))
+                        .and(qExchange.date.eq(new Date(date.atStartOfDay().getSecond()))))
                 .set(qExchange.value, value)
                 .execute();
     }

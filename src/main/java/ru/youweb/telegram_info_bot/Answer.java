@@ -1,10 +1,13 @@
 package ru.youweb.telegram_info_bot;
 
+import com.typesafe.config.Config;
 import ru.youweb.telegram_info_bot.db.CurrencyDb;
 import ru.youweb.telegram_info_bot.db.CurrencyRateDb;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Answer {
@@ -13,9 +16,9 @@ public class Answer {
 
     private List<String> currency = new ArrayList<String>();
 
-    private Calendar date = new GregorianCalendar();
+    private LocalDate date = LocalDate.now();
 
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+    private DateTimeFormatter format;
 
     private String val = "";
 
@@ -31,9 +34,11 @@ public class Answer {
 
     private final CurrencyDb currencyDb;
 
-    public Answer(CurrencyRateDb currencyRateDb, CurrencyDb currencyDb) {
+    public Answer(CurrencyRateDb currencyRateDb, CurrencyDb currencyDb, Config config) {
         this.currencyRateDb = currencyRateDb;
         this.currencyDb = currencyDb;
+
+        format = DateTimeFormatter.ofPattern(config.getString("dateFormatAnswer"));
     }
 
     /**
@@ -59,11 +64,11 @@ public class Answer {
         if (command.equals("/c")) {
             val = "";
             val += currency.get(0) + "\n";
-            val += new SimpleDateFormat("yyyy-MM-dd").format(date.getTimeInMillis()) + "\n";
+            val += date.format(format) + "\n";
             for (String cur : (currency.size() > 1 ? currency : currencyDb.getAllCurrency())) {
                 if (cur != currency.get(0)) {
                     try {
-                        val += cur + "=" + currencyRateDb.findValue(currency.get(0), cur, new SimpleDateFormat("yyyyMMdd").format(date.getTimeInMillis())) + "\n";
+                        val += cur + "=" + currencyRateDb.findValue(currency.get(0), cur, date) + "\n";
                     } catch (NullPointerException e) {
 
                     }
@@ -93,7 +98,7 @@ public class Answer {
         return currency;
     }
 
-    public Calendar getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
@@ -110,11 +115,7 @@ public class Answer {
     private void parseValue(String valueMess) {
         if (isInt(String.valueOf(valueMess.charAt(0)))) {
             if (valueMess.length() == 8 && isInt(valueMess)) {
-                try {
-                    date.setTime(sdf.parse(valueMess));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                date = LocalDate.parse(valueMess);
             } else {
                 error = 2;
             }
