@@ -1,6 +1,7 @@
 package ru.youweb.telegram_info_bot.currency;
 
 import com.google.gson.Gson;
+import com.google.inject.Inject;
 import com.typesafe.config.Config;
 import org.asynchttpclient.*;
 import ru.youweb.telegram_info_bot.currency.dto.CurrencyRate;
@@ -21,6 +22,7 @@ public class FixerApi {
 
     private String urlFixer;
 
+    @Inject
     public FixerApi(AsyncHttpClient asyncHttpClient, Gson gson, Config config) {
         this.asyncHttpClient = asyncHttpClient;
         this.gson = gson;

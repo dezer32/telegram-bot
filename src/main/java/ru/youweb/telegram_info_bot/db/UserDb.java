@@ -1,5 +1,6 @@
 package ru.youweb.telegram_info_bot.db;
 
+import com.google.inject.Inject;
 import com.querydsl.sql.SQLQueryFactory;
 import ru.youweb.jdbc.QUser;
 
@@ -9,6 +10,7 @@ public class UserDb {
 
     private SQLQueryFactory queryFactory;
 
+    @Inject
     public UserDb(SQLQueryFactory queryFactory) {
         this.queryFactory = queryFactory;
     }

@@ -1,5 +1,6 @@
 package ru.youweb.telegram_info_bot.db;
 
+import com.google.inject.Inject;
 import com.querydsl.sql.SQLQueryFactory;
 import ru.youweb.jdbc.QCurrency;
 
@@ -13,6 +14,7 @@ public class CurrencyDb {
 
     private Map<String, Integer> currencyId = new HashMap<>();
 
+    @Inject
     public CurrencyDb(SQLQueryFactory queryFactory) {
         this.queryFactory = queryFactory;
     }
