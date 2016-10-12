@@ -2,6 +2,8 @@ package ru.youweb.telegram_info_bot.telegram;
 
 
 import com.google.gson.Gson;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import org.asynchttpclient.*;
 import ru.youweb.telegram_info_bot.telegram.dto.TelegramGetUpdates;
 import ru.youweb.telegram_info_bot.telegram.dto.TelegramMessage;
@@ -27,7 +29,8 @@ public class TelegramApi {
 
     private Gson gson;
 
-    public TelegramApi(String urlBot, AsyncHttpClient asyncHttpClient, Gson gson) {
+    @Inject
+    public TelegramApi(@Named("urlBot") String urlBot, AsyncHttpClient asyncHttpClient, Gson gson) {
         this.urlBot = urlBot;
         this.asyncHttpClient = asyncHttpClient;
         this.gson = gson;

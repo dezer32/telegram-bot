@@ -1,5 +1,6 @@
 package ru.youweb.telegram_info_bot;
 
+import com.google.inject.Inject;
 import com.typesafe.config.Config;
 import ru.youweb.telegram_info_bot.currency.dto.CurrencyRate;
 import ru.youweb.telegram_info_bot.currency.FixerApi;
@@ -14,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 public class FirstRunApp {
 
+    @Inject
     public FirstRunApp(CurrencyRateDb currencyRateDb, CurrencyDb currencyDb, FixerApi fixerApi, Config config) throws ExecutionException, InterruptedException {
         LocalDate dateParse = LocalDate.parse(config.getString("firstRun.date"));
         Duration duration = Duration.parse(config.getString("firstRun.period"));

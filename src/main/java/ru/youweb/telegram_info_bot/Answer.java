@@ -1,5 +1,6 @@
 package ru.youweb.telegram_info_bot;
 
+import com.google.inject.Inject;
 import com.typesafe.config.Config;
 import ru.youweb.telegram_info_bot.db.CurrencyDb;
 import ru.youweb.telegram_info_bot.db.CurrencyRateDb;
@@ -32,6 +33,7 @@ public class Answer {
 
     private final CurrencyDb currencyDb;
 
+    @Inject
     public Answer(CurrencyRateDb currencyRateDb, CurrencyDb currencyDb, Config config) {
         this.currencyRateDb = currencyRateDb;
         this.currencyDb = currencyDb;

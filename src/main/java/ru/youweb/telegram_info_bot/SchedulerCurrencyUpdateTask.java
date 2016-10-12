@@ -1,5 +1,6 @@
 package ru.youweb.telegram_info_bot;
 
+import com.google.inject.Inject;
 import ru.youweb.telegram_info_bot.currency.FixerApi;
 import ru.youweb.telegram_info_bot.currency.dto.CurrencyRate;
 import ru.youweb.telegram_info_bot.db.CurrencyDb;
@@ -17,6 +18,7 @@ public class SchedulerCurrencyUpdateTask extends TimerTask {
 
     private CurrencyDb currencyDb;
 
+    @Inject
     public SchedulerCurrencyUpdateTask(FixerApi fixerApi, CurrencyRateDb currencyRateDb, CurrencyDb currencyDb) {
         this.fixerApi = fixerApi;
         this.currencyRateDb = currencyRateDb;

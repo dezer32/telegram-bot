@@ -1,5 +1,6 @@
 package ru.youweb.telegram_info_bot.db;
 
+import com.google.inject.Inject;
 import com.querydsl.sql.SQLQueryFactory;
 import ru.youweb.jdbc.QExchange;
 
@@ -15,6 +16,7 @@ public class CurrencyRateDb {
 
     private CurrencyDb currencyDb;
 
+    @Inject
     public CurrencyRateDb(SQLQueryFactory queryFactory, CurrencyDb currencyDb) {
         this.queryFactory = queryFactory;
         this.currencyDb = currencyDb;

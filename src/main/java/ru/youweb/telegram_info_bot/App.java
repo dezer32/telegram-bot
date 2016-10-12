@@ -1,6 +1,9 @@
 package ru.youweb.telegram_info_bot;
 
 import com.google.gson.Gson;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.name.Named;
 import com.querydsl.sql.Configuration;
 import com.querydsl.sql.H2Templates;
 import com.querydsl.sql.SQLQueryFactory;
@@ -19,6 +22,10 @@ import ru.youweb.telegram_info_bot.telegram.dto.TelegramMessage;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalUnit;
 import java.util.Date;
 import java.util.Timer;
 import java.util.concurrent.ExecutionException;
@@ -27,43 +34,28 @@ public class App {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
 
-        AsyncHttpClient asyncHttpClient = new DefaultAsyncHttpClient();
+        Injector injector = Guice.createInjector(new TelegramBotModule());
 
-        Gson gson = new Gson();
+        TelegramApi tApi = injector.getInstance(TelegramApi.class);
 
-        Config config = ConfigFactory.load();
+        UserDb userDb = injector.getInstance(UserDb.class);
 
-        TelegramApi tApi = new TelegramApi(config.getString("urlBot"), asyncHttpClient, gson);
+        //injector.getInstance(FirstRunApp.class);
 
-        FixerApi fApi = new FixerApi(asyncHttpClient, gson, config);
+        SchedulerCurrencyUpdateTask st = injector.getInstance(SchedulerCurrencyUpdateTask.class);
 
-        HikariDataSource ds = new HikariDataSource();
-        ds.setJdbcUrl(config.getString("jdbcUrl"));
-        ds.setUsername(config.getString("user"));
-        ds.setPassword(config.getString("pass"));
+        LocalDateTime scheduleStart = injector.getInstance(LocalDateTime.class);
 
-        SQLTemplates templates = new H2Templates();
-        Configuration configDb = new Configuration(templates);
-        SQLQueryFactory queryFactory = new SQLQueryFactory(configDb, ds);
+        Duration duration = injector.getInstance(Duration.class);
 
-        UserDb userDb = new UserDb(queryFactory);
-        CurrencyDb currencyDb = new CurrencyDb(queryFactory);
-        CurrencyRateDb currencyRateDb = new CurrencyRateDb(queryFactory, currencyDb);
-
-        new FirstRunApp(currencyRateDb, currencyDb, fApi, config);
+        while (scheduleStart.isBefore(LocalDateTime.now()))
+            scheduleStart = scheduleStart.plusHours(duration.toHours());
 
         Timer timer = new Timer();
-        SchedulerCurrencyUpdateTask st = new SchedulerCurrencyUpdateTask(fApi, currencyRateDb, currencyDb);
 
-        LocalDate scheduleStart = LocalDate.parse(config.getString("timer.scheduleStart"));
-        Duration duration = Duration.parse(config.getString("timer.schedulePeriod"));
+        timer.schedule(st, new Date(scheduleStart.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()), duration.toMillis());
 
-        while (scheduleStart.isBefore(LocalDate.now()))
-            scheduleStart.plusDays(duration.toDays());
-
-        timer.schedule(st, new Date(scheduleStart.atStartOfDay().getSecond()), duration.toMillis());
-
-        Answer answer = new Answer(currencyRateDb, currencyDb, config);
+        Answer answer = injector.getInstance(Answer.class);
         while (true) {
             for (TelegramMessage message : tApi.update()) {
                 userDb.add(message.getFrom().getId(), message.getFrom().getFirstName() + " " + message.getFrom().getLastName());
