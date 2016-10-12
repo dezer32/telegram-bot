@@ -2,24 +2,41 @@ package ru.youweb.telegram_info_bot.api;
 
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
+import com.mitchellbosecke.pebble.PebbleEngine;
+import com.mitchellbosecke.pebble.error.PebbleException;
+import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import ru.youweb.telegram_info_bot.telegram.TelegramApi;
 
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
 
-public class BotApi {
+abstract public class BotApplication {
+
+    private final TelegramApi telegramApi;
+
+    private final PebbleEngine pebbleEngine;
 
     private Map<String, BiConsumer<Request, Response>> routing = new HashMap<>();
 
-    public BotApi on(String incoming, BiConsumer<Request, Response> function) {
+    public BotApplication(final TelegramApi telegramApi, PebbleEngine pebbleEngine) {
+        this.telegramApi = telegramApi;
+        this.pebbleEngine = pebbleEngine;
+    }
+
+    abstract protected void configure();
+
+    protected BotApplication on(String incoming, BiConsumer<Request, Response> function) {
         routing.put(incoming, function);
         return this;
     }
 
-    public void run(final TelegramApi telegramApi) {
+    public void run() {
         boolean running = true;
         while (running) {
             try {
@@ -47,11 +64,7 @@ public class BotApi {
         }
     }
 
-    public static BotApi create() {
-        return new BotApi();
-    }
-
-    public static final class Request {
+    public final class Request {
 
         private List<String> params;
 
@@ -64,7 +77,7 @@ public class BotApi {
         }
     }
 
-    public static final class Response {
+    public final class Response {
 
         private String content;
 
@@ -75,6 +88,23 @@ public class BotApi {
         public Response setContent(String content) {
             this.content = content;
             return this;
+        }
+
+        public Response setView(String view) {
+            return setView(view, new HashMap<>());
+        }
+
+        public Response setView(String view, Map<String, Object> context) {
+            try {
+                PebbleTemplate template = pebbleEngine.getTemplate(view);
+                Writer writer = new StringWriter();
+
+                template.evaluate(writer, context);
+                return setContent(writer.toString());
+            } catch (PebbleException | IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
         }
 
     }
