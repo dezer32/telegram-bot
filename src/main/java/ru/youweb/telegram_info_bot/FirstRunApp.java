@@ -1,5 +1,6 @@
 package ru.youweb.telegram_info_bot;
 
+import com.github.racc.tscg.TypesafeConfig;
 import com.google.inject.Inject;
 import com.typesafe.config.Config;
 import ru.youweb.telegram_info_bot.currency.dto.CurrencyRate;
@@ -9,6 +10,9 @@ import ru.youweb.telegram_info_bot.db.CurrencyRateDb;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -16,9 +20,9 @@ import java.util.concurrent.TimeUnit;
 public class FirstRunApp {
 
     @Inject
-    public FirstRunApp(CurrencyRateDb currencyRateDb, CurrencyDb currencyDb, FixerApi fixerApi, Config config) throws ExecutionException, InterruptedException {
-        LocalDate dateParse = LocalDate.parse(config.getString("firstRun.date"));
-        Duration duration = Duration.parse(config.getString("firstRun.period"));
+    public FirstRunApp(CurrencyRateDb currencyRateDb, CurrencyDb currencyDb, FixerApi fixerApi,
+                       @TypesafeConfig("firstRun.date") String date) throws ExecutionException, InterruptedException {
+        LocalDate dateParse = LocalDate.parse(date);
         CurrencyRate currencyRate = fixerApi.getCurrencyRate("USD");
         if (!currencyRate.isEmpty()) {
             for (Map.Entry<String, Double> rates : currencyRate.getRates().entrySet()) {
@@ -26,7 +30,7 @@ public class FirstRunApp {
             }
         }
 
-        for (LocalDate end = LocalDate.now(); dateParse.isBefore(end); dateParse.plusDays(duration.toDays())) {
+        for (LocalDate end = LocalDate.now(); dateParse.isBefore(end); dateParse = dateParse.plusDays(1)) {
             for (String currency : currencyDb.getAllCurrencies()) {
                 currencyRate = fixerApi.getCurrencyRate(currency, dateParse);
                 if (!currencyRate.isEmpty()) {

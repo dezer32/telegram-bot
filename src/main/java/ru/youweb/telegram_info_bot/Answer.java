@@ -15,9 +15,11 @@ public class Answer {
 
     private List<String> currency = new ArrayList<String>();
 
-    private LocalDate date = LocalDate.now();
+    private LocalDate date;
 
-    private DateTimeFormatter format;
+    private DateTimeFormatter formatAnswer;
+
+    private DateTimeFormatter formatMessage;
 
     private String val = "";
 
@@ -38,7 +40,8 @@ public class Answer {
         this.currencyRateDb = currencyRateDb;
         this.currencyDb = currencyDb;
 
-        format = DateTimeFormatter.ofPattern(config.getString("dateFormatAnswer"));
+        formatAnswer = DateTimeFormatter.ofPattern(config.getString("dateFormatAnswer"));
+        formatMessage = DateTimeFormatter.ofPattern(config.getString("dateFormatMessage"));
     }
 
     /**
@@ -64,7 +67,7 @@ public class Answer {
         if (command.equals("/c")) {
             val = "";
             val += currency.get(0) + "\n";
-            val += date.format(format) + "\n";
+            val += date.format(formatAnswer) + "\n";
             for (String cur : (currency.size() > 1 ? currency : currencyDb.getAllCurrencies())) {
                 if (cur != currency.get(0)) {
                     try {
@@ -115,12 +118,13 @@ public class Answer {
     private void parseValue(String valueMess) {
         if (isInt(String.valueOf(valueMess.charAt(0)))) {
             if (valueMess.length() == 8 && isInt(valueMess)) {
-                date = LocalDate.parse(valueMess);
+                date = LocalDate.parse(valueMess, formatMessage);
             } else {
                 error = 2;
             }
         } else {
             if (valueMess.length() >= 3) {
+                val = "";
                 for (int i = 0; i < 3; i++) {
                     val += String.valueOf(valueMess.charAt(i));
                 }
@@ -128,7 +132,6 @@ public class Answer {
                     error = 3;
                 } else {
                     currency.add(val);
-                    val = "";
                     valueMess = valueMess.substring(3);
                     if (valueMess.length() > 2) {
                         parseValue(valueMess);

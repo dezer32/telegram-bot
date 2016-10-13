@@ -17,6 +17,7 @@ public class CurrencyDb {
     @Inject
     public CurrencyDb(SQLQueryFactory queryFactory) {
         this.queryFactory = queryFactory;
+        loadCurrency();
     }
 
     public int getId(String currency) {
@@ -28,8 +29,8 @@ public class CurrencyDb {
         return id;
     }
 
-    public Set<String> getAllCurrencies() {
-        return currencyId.keySet();
+    public List<String> getAllCurrencies() {
+        return new ArrayList<>(currencyId.keySet());
     }
 
     private Integer add(String currency) {
@@ -46,5 +47,11 @@ public class CurrencyDb {
 
     private Integer findCurrencyId(String currency) {
         return queryFactory.select(qc.id).from(qc).where(qc.nameCurrency.eq(currency)).fetchOne();
+    }
+
+    private void loadCurrency() {
+        for (String currency: queryFactory.select(qc.nameCurrency).from(qc).fetch()) {
+            getId(currency);
+        }
     }
 }
