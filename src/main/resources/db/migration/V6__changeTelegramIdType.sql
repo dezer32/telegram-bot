@@ -1,0 +1,1 @@
+ALTER TABLE `user` ALTER COLUMN `telegram_id` INT(11) NOT NULL;

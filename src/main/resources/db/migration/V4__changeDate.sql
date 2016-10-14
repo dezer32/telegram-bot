@@ -1,0 +1,1 @@
+ALTER TABLE `exchange` CHANGE `date` `date` DATE NOT NULL;
