@@ -1,0 +1,45 @@
+package ru.youweb.telegram_info_bot;
+
+import com.github.racc.tscg.TypesafeConfig;
+import com.google.inject.Inject;
+import com.typesafe.config.Config;
+import ru.youweb.telegram_info_bot.currency.dto.CurrencyRate;
+import ru.youweb.telegram_info_bot.currency.FixerApi;
+import ru.youweb.telegram_info_bot.db.CurrencyDb;
+import ru.youweb.telegram_info_bot.db.CurrencyRateDb;
+
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+
+public class FirstRunApp {
+
+    @Inject
+    public FirstRunApp(CurrencyRateDb currencyRateDb, CurrencyDb currencyDb, FixerApi fixerApi,
+                       @TypesafeConfig("firstRun.date") String date) throws ExecutionException, InterruptedException {
+        LocalDate dateParse = LocalDate.parse(date);
+        CurrencyRate currencyRate = fixerApi.getCurrencyRate("EUR");
+        if (!currencyRate.isEmpty()) {
+            for (Map.Entry<String, Double> rates : currencyRate.getRates().entrySet()) {
+                currencyRateDb.add(currencyRate.getBase(), rates.getKey(), rates.getValue(), dateParse);
+            }
+        }
+
+        for (LocalDate end = LocalDate.now(); dateParse.isBefore(end); dateParse = dateParse.plusDays(1)) {
+            for (String currency : currencyDb.getAllCurrencies()) {
+                currencyRate = fixerApi.getCurrencyRate(currency, dateParse);
+                if (!currencyRate.isEmpty()) {
+                    for (Map.Entry<String, Double> rates : currencyRate.getRates().entrySet()) {
+                        currencyRateDb.add(currencyRate.getBase(), rates.getKey(), rates.getValue(), dateParse);
+                    }
+                }
+            }
+            TimeUnit.MILLISECONDS.sleep(10);
+        }
+    }
+}
