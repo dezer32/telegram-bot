@@ -1,1 +1,0 @@
-ALTER TABLE `exchange` ALTER COLUMN `date` DATE NOT NULL;

@@ -1,1 +1,0 @@
-ALTER TABLE `user` CHANGE `telegram_id` `telegram_id` INT(11) NOT NULL;
