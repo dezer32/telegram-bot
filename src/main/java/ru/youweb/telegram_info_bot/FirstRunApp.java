@@ -23,7 +23,7 @@ public class FirstRunApp {
     public FirstRunApp(CurrencyRateDb currencyRateDb, CurrencyDb currencyDb, FixerApi fixerApi,
                        @TypesafeConfig("firstRun.date") String date) throws ExecutionException, InterruptedException {
         LocalDate dateParse = LocalDate.parse(date);
-        CurrencyRate currencyRate = fixerApi.getCurrencyRate("USD");
+        CurrencyRate currencyRate = fixerApi.getCurrencyRate("EUR");
         if (!currencyRate.isEmpty()) {
             for (Map.Entry<String, Double> rates : currencyRate.getRates().entrySet()) {
                 currencyRateDb.add(currencyRate.getBase(), rates.getKey(), rates.getValue(), dateParse);

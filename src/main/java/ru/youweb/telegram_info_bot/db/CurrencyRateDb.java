@@ -33,12 +33,14 @@ public class CurrencyRateDb {
     }
 
     public Integer add(String curFrom, String curTo, double value, LocalDate date) {
-        return queryFactory.insert(e)
-                .set(e.idCurFrom, currencyDb.getId(curFrom))
-                .set(e.idCurTo, currencyDb.getId(curTo))
-                .set(e.value, value)
-                .set(e.date, toSqlDate(date))
-                .executeWithKey(Integer.class);
+        if (findValue(curFrom, curTo, date) == null)
+            return queryFactory.insert(e)
+                    .set(e.idCurFrom, currencyDb.getId(curFrom))
+                    .set(e.idCurTo, currencyDb.getId(curTo))
+                    .set(e.value, value)
+                    .set(e.date, toSqlDate(date))
+                    .executeWithKey(Integer.class);
+        else return null;
     }
 
     public void update(String curFrom, String curTo, double value, LocalDate date) {
