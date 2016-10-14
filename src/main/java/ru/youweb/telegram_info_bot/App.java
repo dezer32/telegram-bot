@@ -16,10 +16,6 @@ public class App {
 
         Injector injector = Guice.createInjector(new TelegramBotModule());
 
-        TelegramApi tApi = injector.getInstance(TelegramApi.class);
-
-        UserDb userDb = injector.getInstance(UserDb.class);
-
         //injector.getInstance(FirstRunApp.class);
 
         CurrencyUpdateDailyService st = injector.getInstance(CurrencyUpdateDailyService.class);
