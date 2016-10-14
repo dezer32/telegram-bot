@@ -47,6 +47,7 @@ public class TelegramApi {
                 .setUrl(urlBot + "sendMessage")
                 .addFormParam("chat_id", String.valueOf(id))
                 .addFormParam("text", String.valueOf(text))
+                .addQueryParam("parse_mode", "HTML")
                 .build();
 
         asyncHttpClient.executeRequest(request);

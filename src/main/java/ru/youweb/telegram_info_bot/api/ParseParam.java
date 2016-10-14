@@ -1,12 +1,9 @@
 package ru.youweb.telegram_info_bot.api;
 
-import ru.youweb.telegram_info_bot.db.CurrencyRateDb;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ParseParam {
 
@@ -18,20 +15,15 @@ public class ParseParam {
 class CurrencyParam {
     private String baseCurrency;
 
-    private List<String> listCurrencyName;
+    private List<String> listCurrencyName = new ArrayList<>();
 
     private LocalDate date;
 
-    private String message;
-
     private DateTimeFormatter formatMessage;
-
-    private String val;
 
     private Integer error = 0;
 
     public CurrencyParam(String message, DateTimeFormatter formatMessage) {
-        this.message = message;
         this.formatMessage = formatMessage;
 
         parse(message);
@@ -54,30 +46,38 @@ class CurrencyParam {
     }
 
     private void parse(String parseMessage) {
-        if (isInt(String.valueOf(parseMessage.charAt(0)))) {
-            if (parseMessage.length() == 8 && isInt(parseMessage)) {
-                date = LocalDate.parse(parseMessage, formatMessage);
+        if (parseMessage != null && !"".equals(parseMessage)) {
+            if (isInt(String.valueOf(parseMessage.charAt(0)))) {
+                if (parseMessage.length() == 8 && isInt(parseMessage)) {
+                    date = LocalDate.parse(parseMessage, formatMessage);
+                } else {
+                    error = 2;
+                }
             } else {
-                error = 2;
+                if (parseMessage.length() >= 3) {
+                    String val = "";
+                    for (int i = 0; i < 3; i++) {
+                        val += String.valueOf(parseMessage.charAt(i));
+                    }
+                    if (listCurrencyName.contains(val)) {
+                        error = 3;
+                    } else {
+                        if (baseCurrency == null || "".equals(baseCurrency)) {
+                            baseCurrency = val;
+                        } else {
+                            listCurrencyName.add(val);
+                        }
+                        parseMessage = parseMessage.substring(3);
+                        if (parseMessage.length() > 2) {
+                            parse(parseMessage);
+                        }
+                    }
+                } else {
+                    error = 1;
+                }
             }
         } else {
-            if (parseMessage.length() >= 3) {
-                val = "";
-                for (int i = 0; i < 3; i++) {
-                    val += String.valueOf(parseMessage.charAt(i));
-                }
-                if (listCurrencyName.contains(val)) {
-                    error = 3;
-                } else {
-                    listCurrencyName.add(val);
-                    parseMessage = parseMessage.substring(3);
-                    if (parseMessage.length() > 2) {
-                        parse(parseMessage);
-                    }
-                }
-            } else {
-                error = 1;
-            }
+            error = 1;
         }
     }
 
@@ -92,25 +92,3 @@ class CurrencyParam {
 
 }
 
-class PreCurrencyParam {
-
-    public Map<String, Object> pre(CurrencyParam param, CurrencyRateDb rateDb) {
-        Map params = new HashMap<String, Object>();
-
-        params.put("base", param.getBaseCurrency());
-        params.put("date", param.getDate());
-        params.put("listRate", preListCurrency(param, rateDb));
-
-        return params;
-    }
-
-    private Map<String, Double> preListCurrency(CurrencyParam param, CurrencyRateDb rateDb) {
-        Map listCurrency = new HashMap<String, Double>();
-        Double value;
-        for (String currency: param.getListCurrencyName()) {
-            value = rateDb.findValue(param.getBaseCurrency(), currency, param.getDate());
-            listCurrency.put(currency, value);
-        }
-        return listCurrency;
-    }
-}
