@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import org.asynchttpclient.*;
+import org.slf4j.Logger;
 import ru.youweb.telegram_info_bot.telegram.dto.TelegramGetUpdates;
 import ru.youweb.telegram_info_bot.telegram.dto.TelegramMessage;
 import ru.youweb.telegram_info_bot.telegram.dto.TelegramResult;
@@ -29,11 +30,14 @@ public class TelegramApi {
 
     private Gson gson;
 
+    private Logger log;
+
     @Inject
-    public TelegramApi(@Named("urlBot") String urlBot, AsyncHttpClient asyncHttpClient, Gson gson) {
+    public TelegramApi(@Named("urlBot") String urlBot, AsyncHttpClient asyncHttpClient, Gson gson, Logger log) {
         this.urlBot = urlBot;
         this.asyncHttpClient = asyncHttpClient;
         this.gson = gson;
+        this.log = log;
     }
 
     /**
@@ -51,6 +55,8 @@ public class TelegramApi {
                 .build();
 
         asyncHttpClient.executeRequest(request);
+
+        log.info("Отправка ответа: ID={}", id);
     }
 
     /**
@@ -59,12 +65,14 @@ public class TelegramApi {
      * @return возвращает список сообщение пользователей
      */
     public List<TelegramMessage> update() throws ExecutionException, InterruptedException {
-        List<TelegramMessage> listUserMessage = new ArrayList<TelegramMessage>();
+        List<TelegramMessage> listUserMessage = new ArrayList<>();
         for (TelegramResult result : getUpdates().getResult()) {
             listUserMessage.add(result.getMessage());
             if (result.getUpdateId() >= updateId)
                 updateId = result.getUpdateId() + 1;
         }
+        if (listUserMessage.size() > 0)
+            log.info("Получили сообщения ({})", listUserMessage.size());
         return listUserMessage;
     }
 

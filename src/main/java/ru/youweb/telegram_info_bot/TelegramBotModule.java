@@ -16,6 +16,8 @@ import com.typesafe.config.ConfigFactory;
 import com.zaxxer.hikari.HikariDataSource;
 import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.DefaultAsyncHttpClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.youweb.telegram_info_bot.currency.FixerApi;
 import ru.youweb.telegram_info_bot.db.CurrencyDb;
 import ru.youweb.telegram_info_bot.db.CurrencyRateDb;
@@ -69,6 +71,11 @@ public class TelegramBotModule extends AbstractModule {
     @Singleton
     public PebbleEngine pebbleEngine() {
         return new PebbleEngine.Builder().build();
+    }
+
+    @Provides
+    public Logger pebleLogger() {
+        return LoggerFactory.getLogger(App.class);
     }
 
 }

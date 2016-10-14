@@ -3,6 +3,7 @@ package ru.youweb.telegram_info_bot;
 import com.github.racc.tscg.TypesafeConfig;
 import com.google.inject.Inject;
 import com.typesafe.config.Config;
+import org.slf4j.Logger;
 import ru.youweb.telegram_info_bot.currency.dto.CurrencyRate;
 import ru.youweb.telegram_info_bot.currency.FixerApi;
 import ru.youweb.telegram_info_bot.db.CurrencyDb;
@@ -21,7 +22,8 @@ public class FirstRunApp {
 
     @Inject
     public FirstRunApp(CurrencyRateDb currencyRateDb, CurrencyDb currencyDb, FixerApi fixerApi,
-                       @TypesafeConfig("firstRun.date") String date) throws ExecutionException, InterruptedException {
+                       @TypesafeConfig("firstRun.date") String date, Logger log) throws ExecutionException, InterruptedException {
+        log.info("Начало начального импорта.");
         LocalDate dateParse = LocalDate.parse(date);
         CurrencyRate currencyRate = fixerApi.getCurrencyRate("EUR");
         if (!currencyRate.isEmpty()) {
@@ -41,5 +43,6 @@ public class FirstRunApp {
             }
             TimeUnit.MILLISECONDS.sleep(10);
         }
+        log.info("Конец начального импорта.");
     }
 }

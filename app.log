@@ -1,0 +1,174 @@
+2016-10-14 17:34:20,130 INFO [main] o.r.Reflections [Reflections.java:229] Reflections took 602 ms to scan 1 urls, producing 65 keys and 254 values 
+2016-10-14 17:34:20,520 INFO [main] r.y.t.App [App.java:23] Строка логгера
+2016-10-14 17:34:21,431 INFO [main] c.z.h.HikariDataSource [HikariDataSource.java:93] HikariPool-1 - Started.
+2016-10-14 17:38:51,746 INFO [main] o.r.Reflections [Reflections.java:229] Reflections took 182 ms to scan 1 urls, producing 65 keys and 254 values 
+2016-10-14 17:38:52,391 INFO [main] r.y.t.App [App.java:23] Строка логгера
+2016-10-14 17:38:54,186 INFO [main] c.z.h.HikariDataSource [HikariDataSource.java:93] HikariPool-1 - Started.
+2016-10-14 17:46:58,267 INFO [main] o.r.Reflections [Reflections.java:229] Reflections took 176 ms to scan 1 urls, producing 66 keys and 257 values 
+2016-10-14 17:46:59,290 INFO [main] c.z.h.HikariDataSource [HikariDataSource.java:93] HikariPool-1 - Started.
+2016-10-14 17:47:24,563 INFO [main] o.r.Reflections [Reflections.java:229] Reflections took 407 ms to scan 1 urls, producing 66 keys and 257 values 
+2016-10-14 17:47:25,920 INFO [main] c.z.h.HikariDataSource [HikariDataSource.java:93] HikariPool-1 - Started.
+2016-10-14 17:47:34,766 INFO [main] r.y.t.App [TelegramApi.java:74] Получили сообщения (0)
+2016-10-14 17:47:41,836 INFO [main] r.y.t.App [TelegramApi.java:74] Получили сообщения (0)
+2016-10-14 17:47:46,273 INFO [main] r.y.t.App [TelegramApi.java:74] Получили сообщения (1)
+2016-10-14 17:47:46,924 INFO [main] r.y.t.App [TelegramApi.java:74] Получили сообщения (1)
+2016-10-14 17:47:49,193 INFO [main] r.y.t.App [TelegramApi.java:74] Получили сообщения (1)
+2016-10-14 17:47:49,220 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 17:47:56,419 INFO [main] r.y.t.App [TelegramApi.java:74] Получили сообщения (0)
+2016-10-14 17:48:03,480 INFO [main] r.y.t.App [TelegramApi.java:74] Получили сообщения (0)
+2016-10-14 18:00:52,093 INFO [main] o.r.Reflections [Reflections.java:229] Reflections took 211 ms to scan 1 urls, producing 66 keys and 255 values 
+2016-10-14 18:00:54,354 INFO [main] c.z.h.HikariDataSource [HikariDataSource.java:93] HikariPool-1 - Started.
+2016-10-14 18:01:01,902 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:01:01,910 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:01:01,911 INFO [main] r.y.t.App [BotApplicationImpl.java:37] Базовая валюта: null
+2016-10-14 18:01:01,911 INFO [main] r.y.t.App [BotApplicationImpl.java:38] Дата: null
+2016-10-14 18:01:01,912 INFO [main] r.y.t.App [BotApplicationImpl.java:39] Вторая валюта: 0
+2016-10-14 18:01:01,941 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 18:02:32,449 INFO [main] o.r.Reflections [Reflections.java:229] Reflections took 207 ms to scan 1 urls, producing 66 keys and 255 values 
+2016-10-14 18:02:34,726 INFO [main] c.z.h.HikariDataSource [HikariDataSource.java:93] HikariPool-1 - Started.
+2016-10-14 18:02:43,578 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:02:43,583 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:02:43,584 INFO [main] r.y.t.App [BotApplicationImpl.java:42] Код ошибки: 1
+2016-10-14 18:02:43,610 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 18:02:56,123 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:02:56,128 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:02:56,129 INFO [main] r.y.t.App [BotApplicationImpl.java:38] Базовая валюта: EUR
+2016-10-14 18:02:56,130 INFO [main] r.y.t.App [BotApplicationImpl.java:39] Дата: 2000-01-01
+2016-10-14 18:02:56,130 INFO [main] r.y.t.App [BotApplicationImpl.java:40] Вторая валюта: 0
+2016-10-14 18:02:56,330 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 18:03:55,522 INFO [main] o.r.Reflections [Reflections.java:229] Reflections took 284 ms to scan 1 urls, producing 66 keys and 255 values 
+2016-10-14 18:03:57,332 INFO [main] c.z.h.HikariDataSource [HikariDataSource.java:93] HikariPool-1 - Started.
+2016-10-14 18:04:03,164 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:04:03,171 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:04:03,171 INFO [main] r.y.t.App [BotApplicationImpl.java:38] Базовая валюта: EUR
+2016-10-14 18:04:03,171 INFO [main] r.y.t.App [BotApplicationImpl.java:39] Дата: 2000-01-01
+2016-10-14 18:04:03,171 INFO [main] r.y.t.App [BotApplicationImpl.java:41] Относительно всех валют
+2016-10-14 18:04:03,453 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 18:04:11,371 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:04:11,371 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:04:11,372 INFO [main] r.y.t.App [BotApplicationImpl.java:38] Базовая валюта: EUR
+2016-10-14 18:04:11,372 INFO [main] r.y.t.App [BotApplicationImpl.java:39] Дата: 2000-01-01
+2016-10-14 18:04:11,372 INFO [main] r.y.t.App [BotApplicationImpl.java:43] Вторая валюта: 1
+2016-10-14 18:04:11,374 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 18:04:25,119 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:04:25,120 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:04:25,120 INFO [main] r.y.t.App [BotApplicationImpl.java:38] Базовая валюта: EUR
+2016-10-14 18:04:25,120 INFO [main] r.y.t.App [BotApplicationImpl.java:39] Дата: 2000-01-01
+2016-10-14 18:04:25,121 INFO [main] r.y.t.App [BotApplicationImpl.java:41] Относительно всех валют
+2016-10-14 18:04:25,271 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 18:04:25,583 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:04:25,584 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:04:25,585 INFO [main] r.y.t.App [BotApplicationImpl.java:38] Базовая валюта: EUR
+2016-10-14 18:04:25,585 INFO [main] r.y.t.App [BotApplicationImpl.java:39] Дата: 2000-01-01
+2016-10-14 18:04:25,585 INFO [main] r.y.t.App [BotApplicationImpl.java:41] Относительно всех валют
+2016-10-14 18:04:25,622 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 18:04:26,281 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:04:26,282 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:04:26,282 INFO [main] r.y.t.App [BotApplicationImpl.java:38] Базовая валюта: EUR
+2016-10-14 18:04:26,282 INFO [main] r.y.t.App [BotApplicationImpl.java:39] Дата: 2000-01-01
+2016-10-14 18:04:26,282 INFO [main] r.y.t.App [BotApplicationImpl.java:41] Относительно всех валют
+2016-10-14 18:04:26,337 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 18:04:26,505 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:04:26,505 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:04:26,505 INFO [main] r.y.t.App [BotApplicationImpl.java:38] Базовая валюта: EUR
+2016-10-14 18:04:26,506 INFO [main] r.y.t.App [BotApplicationImpl.java:39] Дата: 2000-01-01
+2016-10-14 18:04:26,506 INFO [main] r.y.t.App [BotApplicationImpl.java:41] Относительно всех валют
+2016-10-14 18:04:26,549 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 18:04:28,650 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:04:28,651 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:04:28,652 INFO [main] r.y.t.App [BotApplicationImpl.java:38] Базовая валюта: EUR
+2016-10-14 18:04:28,652 INFO [main] r.y.t.App [BotApplicationImpl.java:39] Дата: 2000-01-01
+2016-10-14 18:04:28,652 INFO [main] r.y.t.App [BotApplicationImpl.java:41] Относительно всех валют
+2016-10-14 18:04:28,689 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 18:05:12,121 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:05:12,121 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:05:12,121 INFO [main] r.y.t.App [BotApplicationImpl.java:38] Базовая валюта: EUR
+2016-10-14 18:05:12,121 INFO [main] r.y.t.App [BotApplicationImpl.java:39] Дата: 2000-01-01
+2016-10-14 18:05:12,121 INFO [main] r.y.t.App [BotApplicationImpl.java:41] Относительно всех валют
+2016-10-14 18:05:12,155 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 18:05:12,400 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:05:12,401 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:05:12,402 INFO [main] r.y.t.App [BotApplicationImpl.java:38] Базовая валюта: EUR
+2016-10-14 18:05:12,402 INFO [main] r.y.t.App [BotApplicationImpl.java:39] Дата: 2000-01-01
+2016-10-14 18:05:12,402 INFO [main] r.y.t.App [BotApplicationImpl.java:41] Относительно всех валют
+2016-10-14 18:05:12,422 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 18:05:12,742 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:05:12,742 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:05:12,742 INFO [main] r.y.t.App [BotApplicationImpl.java:38] Базовая валюта: EUR
+2016-10-14 18:05:12,743 INFO [main] r.y.t.App [BotApplicationImpl.java:39] Дата: 2000-01-01
+2016-10-14 18:05:12,743 INFO [main] r.y.t.App [BotApplicationImpl.java:41] Относительно всех валют
+2016-10-14 18:05:12,768 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 18:05:13,855 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:05:13,855 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:05:13,855 INFO [main] r.y.t.App [BotApplicationImpl.java:46] Код ошибки: 2
+2016-10-14 18:05:13,857 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 18:05:14,776 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:05:14,777 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:05:14,777 INFO [main] r.y.t.App [BotApplicationImpl.java:38] Базовая валюта: EUR
+2016-10-14 18:05:14,777 INFO [main] r.y.t.App [BotApplicationImpl.java:39] Дата: 2000-01-01
+2016-10-14 18:05:14,778 INFO [main] r.y.t.App [BotApplicationImpl.java:41] Относительно всех валют
+2016-10-14 18:05:14,823 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 18:05:15,215 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:05:15,215 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:05:15,215 INFO [main] r.y.t.App [BotApplicationImpl.java:38] Базовая валюта: EUR
+2016-10-14 18:05:15,215 INFO [main] r.y.t.App [BotApplicationImpl.java:39] Дата: 2000-01-01
+2016-10-14 18:05:15,215 INFO [main] r.y.t.App [BotApplicationImpl.java:41] Относительно всех валют
+2016-10-14 18:05:15,233 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 18:05:15,571 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:05:15,572 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:05:15,572 INFO [main] r.y.t.App [BotApplicationImpl.java:38] Базовая валюта: EUR
+2016-10-14 18:05:15,572 INFO [main] r.y.t.App [BotApplicationImpl.java:39] Дата: 2000-01-01
+2016-10-14 18:05:15,572 INFO [main] r.y.t.App [BotApplicationImpl.java:41] Относительно всех валют
+2016-10-14 18:05:15,604 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 18:05:15,931 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:05:15,931 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:05:15,932 INFO [main] r.y.t.App [BotApplicationImpl.java:38] Базовая валюта: EUR
+2016-10-14 18:05:15,932 INFO [main] r.y.t.App [BotApplicationImpl.java:39] Дата: 2000-01-01
+2016-10-14 18:05:15,932 INFO [main] r.y.t.App [BotApplicationImpl.java:41] Относительно всех валют
+2016-10-14 18:05:15,952 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 18:05:16,263 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:05:16,264 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:05:16,264 INFO [main] r.y.t.App [BotApplicationImpl.java:38] Базовая валюта: EUR
+2016-10-14 18:05:16,264 INFO [main] r.y.t.App [BotApplicationImpl.java:39] Дата: 2000-01-01
+2016-10-14 18:05:16,264 INFO [main] r.y.t.App [BotApplicationImpl.java:41] Относительно всех валют
+2016-10-14 18:05:16,281 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 18:05:16,521 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:05:16,522 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:05:16,522 INFO [main] r.y.t.App [BotApplicationImpl.java:38] Базовая валюта: EUR
+2016-10-14 18:05:16,522 INFO [main] r.y.t.App [BotApplicationImpl.java:39] Дата: 2000-01-01
+2016-10-14 18:05:16,522 INFO [main] r.y.t.App [BotApplicationImpl.java:41] Относительно всех валют
+2016-10-14 18:05:16,549 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 18:05:16,781 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:05:16,781 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:05:16,781 INFO [main] r.y.t.App [BotApplicationImpl.java:38] Базовая валюта: EUR
+2016-10-14 18:05:16,781 INFO [main] r.y.t.App [BotApplicationImpl.java:39] Дата: 2000-01-01
+2016-10-14 18:05:16,782 INFO [main] r.y.t.App [BotApplicationImpl.java:41] Относительно всех валют
+2016-10-14 18:05:16,805 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 18:05:16,961 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:05:16,962 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:05:16,963 INFO [main] r.y.t.App [BotApplicationImpl.java:38] Базовая валюта: EUR
+2016-10-14 18:05:16,963 INFO [main] r.y.t.App [BotApplicationImpl.java:39] Дата: 2000-01-01
+2016-10-14 18:05:16,963 INFO [main] r.y.t.App [BotApplicationImpl.java:41] Относительно всех валют
+2016-10-14 18:05:16,978 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 18:05:17,214 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:05:17,215 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:05:17,215 INFO [main] r.y.t.App [BotApplicationImpl.java:38] Базовая валюта: EUR
+2016-10-14 18:05:17,216 INFO [main] r.y.t.App [BotApplicationImpl.java:39] Дата: 2000-01-01
+2016-10-14 18:05:17,216 INFO [main] r.y.t.App [BotApplicationImpl.java:41] Относительно всех валют
+2016-10-14 18:05:17,254 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 18:05:17,373 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:05:17,373 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:05:17,373 INFO [main] r.y.t.App [BotApplicationImpl.java:38] Базовая валюта: EUR
+2016-10-14 18:05:17,373 INFO [main] r.y.t.App [BotApplicationImpl.java:39] Дата: 2000-01-01
+2016-10-14 18:05:17,373 INFO [main] r.y.t.App [BotApplicationImpl.java:41] Относительно всех валют
+2016-10-14 18:05:17,389 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 18:05:18,306 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:05:18,307 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:05:18,308 INFO [main] r.y.t.App [BotApplicationImpl.java:46] Код ошибки: 2
+2016-10-14 18:05:18,314 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
+2016-10-14 18:05:22,671 INFO [main] r.y.t.App [TelegramApi.java:75] Получили сообщения (1)
+2016-10-14 18:05:22,671 INFO [main] r.y.t.App [BotApplicationImpl.java:36] Команда: /c
+2016-10-14 18:05:22,671 INFO [main] r.y.t.App [BotApplicationImpl.java:38] Базовая валюта: EUR
+2016-10-14 18:05:22,671 INFO [main] r.y.t.App [BotApplicationImpl.java:39] Дата: 2000-01-01
+2016-10-14 18:05:22,671 INFO [main] r.y.t.App [BotApplicationImpl.java:43] Вторая валюта: 1
+2016-10-14 18:05:22,672 INFO [main] r.y.t.App [TelegramApi.java:59] Отправка ответа: ID=230980831
