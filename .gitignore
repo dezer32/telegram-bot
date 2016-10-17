@@ -20,4 +20,4 @@ tbot.*
 *.db
 
 # log
-.log
+*.log
