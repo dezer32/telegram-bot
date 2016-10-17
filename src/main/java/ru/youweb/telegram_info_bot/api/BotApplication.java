@@ -6,7 +6,6 @@ import com.mitchellbosecke.pebble.PebbleEngine;
 import com.mitchellbosecke.pebble.error.PebbleException;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import ru.youweb.telegram_info_bot.telegram.TelegramApi;
-import ru.youweb.telegram_info_bot.telegram.dto.TelegramMessage;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -16,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
 
 abstract public class BotApplication {
 
@@ -80,9 +78,7 @@ abstract public class BotApplication {
         }
 
         public String getFirstParam() {
-            if (getParams() == null || getParams().size() == 0)
-                return "";
-            return getParams().get(0);
+            return getParams() == null || getParams().size() == 0 ? "" : getParams().get(0);
         }
     }
 

@@ -70,11 +70,11 @@ public class TelegramBotModule extends AbstractModule {
     @Provides
     @Singleton
     public PebbleEngine pebbleEngine() {
-        return new PebbleEngine.Builder().build();
+        return new PebbleEngine.Builder().cacheActive(true).build();
     }
 
     @Provides
-    public Logger pebleLogger() {
+    public Logger logger() {
         return LoggerFactory.getLogger(App.class);
     }
 
