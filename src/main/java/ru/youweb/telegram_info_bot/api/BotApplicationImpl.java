@@ -2,7 +2,6 @@ package ru.youweb.telegram_info_bot.api;
 
 import com.google.inject.Inject;
 import com.mitchellbosecke.pebble.PebbleEngine;
-import com.mitchellbosecke.pebble.template.PebbleTemplateImpl;
 import com.typesafe.config.Config;
 import org.slf4j.Logger;
 import ru.youweb.telegram_info_bot.db.CurrencyDb;
@@ -12,16 +11,18 @@ import ru.youweb.telegram_info_bot.telegram.TelegramApi;
 import java.time.format.DateTimeFormatter;
 
 public class BotApplicationImpl extends BotApplication {
-    Config config;
 
-    CurrencyRateDb rateDb;
+    private Config config;
 
-    CurrencyDb currencyDb;
+    private CurrencyRateDb rateDb;
 
-    Logger log;
+    private CurrencyDb currencyDb;
+
+    private Logger log;
 
     @Inject
-    public BotApplicationImpl(TelegramApi telegramApi, PebbleEngine pebbleEngine, Config config, CurrencyRateDb rateDb, CurrencyDb currencyDb, Logger logger) {
+    public BotApplicationImpl(TelegramApi telegramApi, PebbleEngine pebbleEngine, Config config, CurrencyRateDb rateDb,
+                              CurrencyDb currencyDb, Logger logger) {
         super(telegramApi, pebbleEngine);
         this.config = config;
         this.rateDb = rateDb;

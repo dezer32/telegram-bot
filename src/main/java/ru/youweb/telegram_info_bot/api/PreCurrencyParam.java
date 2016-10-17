@@ -10,7 +10,7 @@ import java.util.Map;
 class PreCurrencyParam {
 
     public Map<String, Object> pre(CurrencyParam param, CurrencyRateDb rateDb, CurrencyDb currencyDb, DateTimeFormatter format) {
-        Map params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         if (param.getError() == 0) {
             params.put("base", param.getBaseCurrency());
             params.put("date", param.getDate().format(format));
@@ -22,12 +22,10 @@ class PreCurrencyParam {
     }
 
     private Map<String, Double> preListCurrency(CurrencyParam param, CurrencyRateDb rateDb, CurrencyDb currencyDb) {
-        Map listCurrency = new HashMap<String, Double>();
-        Double value;
-        for (String currency: (param.getListCurrencyName().size() > 0 ? param.getListCurrencyName() : currencyDb.getAllCurrencies())) {
+        Map<String, Double> listCurrency = new HashMap<>();
+        for (String currency : (param.getListCurrencyName().size() > 0 ? param.getListCurrencyName() : currencyDb.getAllCurrencies())) {
             if (!param.getBaseCurrency().equals(currency)) {
-                value = rateDb.findValue(param.getBaseCurrency(), currency, param.getDate());
-                listCurrency.put(currency, value);
+                listCurrency.put(currency, rateDb.findValue(param.getBaseCurrency(), currency, param.getDate()));
             }
         }
         return listCurrency;
