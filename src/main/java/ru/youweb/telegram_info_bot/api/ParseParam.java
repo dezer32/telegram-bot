@@ -41,6 +41,10 @@ class CurrencyParam {
         return date;
     }
 
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
     public Integer getError() {
         return error;
     }

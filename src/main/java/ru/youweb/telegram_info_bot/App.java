@@ -2,6 +2,7 @@ package ru.youweb.telegram_info_bot;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import org.flywaydb.core.Flyway;
 import ru.youweb.telegram_info_bot.api.BotApplicationImpl;
 
 import java.util.concurrent.ExecutionException;
@@ -12,7 +13,10 @@ public class App {
 
         Injector injector = Guice.createInjector(new TelegramBotModule());
 
-        injector.getInstance(FirstRunApp.class);
+        injector.getInstance(Flyway.class);
+
+        FirstRunApp firstRunApp = injector.getInstance(FirstRunApp.class);
+        firstRunApp.startAsync();
 
         CurrencyUpdateDailyService st = injector.getInstance(CurrencyUpdateDailyService.class);
         st.startAsync();

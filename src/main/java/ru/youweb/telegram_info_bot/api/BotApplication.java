@@ -53,7 +53,7 @@ abstract public class BotApplication {
                                 Response response = new Response();
                                 function.accept(request, response);
                                 if (!Strings.isNullOrEmpty(response.getContent())) {
-                                    telegramApi.sendAnswer(message.getFrom().getId(), response.getContent());
+                                    telegramApi.sendAnswer(message.getChat().getId(), response.getContent());
                                 }
                             }
                         }

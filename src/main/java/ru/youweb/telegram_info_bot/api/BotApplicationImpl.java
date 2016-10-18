@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.mitchellbosecke.pebble.PebbleEngine;
 import com.typesafe.config.Config;
 import org.slf4j.Logger;
+import ru.youweb.telegram_info_bot.currency.FixerApi;
 import ru.youweb.telegram_info_bot.db.CurrencyDb;
 import ru.youweb.telegram_info_bot.db.CurrencyRateDb;
 import ru.youweb.telegram_info_bot.telegram.TelegramApi;
@@ -20,14 +21,16 @@ public class BotApplicationImpl extends BotApplication {
 
     private Logger log;
 
+    private FixerApi fixerApi;
+
     @Inject
-    public BotApplicationImpl(TelegramApi telegramApi, PebbleEngine pebbleEngine, Config config, CurrencyRateDb rateDb,
-                              CurrencyDb currencyDb, Logger logger) {
+    public BotApplicationImpl(TelegramApi telegramApi, PebbleEngine pebbleEngine, Config config, CurrencyRateDb rateDb, CurrencyDb currencyDb, Logger log, FixerApi fixerApi) {
         super(telegramApi, pebbleEngine);
         this.config = config;
         this.rateDb = rateDb;
         this.currencyDb = currencyDb;
-        this.log = logger;
+        this.log = log;
+        this.fixerApi = fixerApi;
     }
 
     @Override
@@ -46,10 +49,14 @@ public class BotApplicationImpl extends BotApplication {
             } else {
                 log.info("Код ошибки: " + message.getError());
             }
-            response.setView(config.getString("tmpl.answer"), new PreCurrencyParam().pre(message, rateDb, currencyDb, DateTimeFormatter.ofPattern(config.getString("dateFormatAnswer"))));
+            response.setView(config.getString("tmpl.answer"), new PreCurrencyParam().pre(message, rateDb, currencyDb, fixerApi, DateTimeFormatter.ofPattern(config.getString("dateFormatAnswer"))));
         });
         on("/h", (request, response) -> {
             response.setView(config.getString("tmpl.help"));
+        });
+
+        on("/start", (request, response) -> {
+            response.setView((config.getString("tmpl.welcome")));
         });
     }
 }
