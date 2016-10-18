@@ -38,7 +38,7 @@ class CurrencyParam {
     }
 
     public LocalDate getDate() {
-        return date;
+        return date != null ? date : LocalDate.now();
     }
 
     public void setDate(LocalDate date) {
