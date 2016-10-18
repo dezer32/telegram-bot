@@ -8,6 +8,7 @@ public class TelegramMessage {
     private int date;
     private String text;
     private TelegramAuthorInfo from;
+    private TelegramAuthorInfo chat;
 
     public int getMessageId() {
         return messageId;
@@ -39,5 +40,13 @@ public class TelegramMessage {
 
     public void setFrom(TelegramAuthorInfo from) {
         this.from = from;
+    }
+
+    public TelegramAuthorInfo getChat() {
+        return chat;
+    }
+
+    public void setChat(TelegramAuthorInfo chat) {
+        this.chat = chat;
     }
 }

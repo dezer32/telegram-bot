@@ -16,6 +16,9 @@ import com.typesafe.config.ConfigFactory;
 import com.zaxxer.hikari.HikariDataSource;
 import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.DefaultAsyncHttpClient;
+import org.flywaydb.core.Flyway;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.youweb.telegram_info_bot.currency.FixerApi;
 import ru.youweb.telegram_info_bot.db.CurrencyDb;
 import ru.youweb.telegram_info_bot.db.CurrencyRateDb;
@@ -68,7 +71,20 @@ public class TelegramBotModule extends AbstractModule {
     @Provides
     @Singleton
     public PebbleEngine pebbleEngine() {
-        return new PebbleEngine.Builder().build();
+        return new PebbleEngine.Builder().cacheActive(true).build();
+    }
+
+    @Provides
+    public Logger logger() {
+        return LoggerFactory.getLogger(App.class);
+    }
+
+    @Provides
+    public Flyway provideFlyway() {
+        Flyway flyway = new Flyway();
+        flyway.setDataSource(provideHikariDataSource());
+        flyway.migrate();
+        return flyway;
     }
 
 }

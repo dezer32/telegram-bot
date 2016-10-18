@@ -50,8 +50,6 @@ public class CurrencyDb {
     }
 
     private void loadCurrency() {
-        for (String currency: queryFactory.select(qc.nameCurrency).from(qc).fetch()) {
-            getId(currency);
-        }
+        queryFactory.select(qc.nameCurrency).from(qc).fetch().forEach(this::getId);
     }
 }

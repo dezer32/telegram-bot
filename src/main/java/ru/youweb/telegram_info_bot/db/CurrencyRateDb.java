@@ -32,6 +32,13 @@ public class CurrencyRateDb {
                 .fetchOne();
     }
 
+    public boolean issetInfo(String currencyBase, LocalDate date) {
+        return queryFactory.select(e.value).from(e)
+                .where(e.idCurFrom.eq(currencyDb.getId(currencyBase)),
+                        e.date.eq(toSqlDate(date)))
+                .fetchCount() > 0;
+    }
+
     public Integer add(String curFrom, String curTo, double value, LocalDate date) {
         if (findValue(curFrom, curTo, date) == null)
             return queryFactory.insert(e)

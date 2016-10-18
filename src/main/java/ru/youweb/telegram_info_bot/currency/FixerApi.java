@@ -30,26 +30,33 @@ public class FixerApi {
         this.urlFixer = config.getString("urlFixerApi");
     }
 
-    public CurrencyRate getCurrencyRate(String currency, LocalDate date) throws ExecutionException, InterruptedException {
+    public CurrencyRate getCurrencyRate(String currency, LocalDate date) {
         return getCurrencyRate(currency, date.format(format));
     }
 
-    public CurrencyRate getCurrencyRate(String currency) throws ExecutionException, InterruptedException {
+    public CurrencyRate getCurrencyRate(String currency) {
         return getCurrencyRate(currency, "latest");
     }
 
-    private CurrencyRate getCurrencyRate(String currency, String date) throws ExecutionException, InterruptedException {
+    private CurrencyRate getCurrencyRate(String currency, String date) {
         Request request = new RequestBuilder()
                 .setUrl(urlFixer + "/" + date)
                 .addQueryParam("base", currency)
                 .build();
 
-        return asyncHttpClient.executeRequest(request, new AsyncCompletionHandler<CurrencyRate>() {
-            @Override
-            public CurrencyRate onCompleted(Response response) throws Exception {
-                return gson.fromJson(response.getResponseBody(), CurrencyRate.class);
-            }
-        }).get();
+        try {
+            return asyncHttpClient.executeRequest(request, new AsyncCompletionHandler<CurrencyRate>() {
+                @Override
+                public CurrencyRate onCompleted(Response response) throws Exception {
+                    return gson.fromJson(response.getResponseBody(), CurrencyRate.class);
+                }
+            }).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
