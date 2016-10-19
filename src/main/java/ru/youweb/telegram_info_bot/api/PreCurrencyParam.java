@@ -42,7 +42,13 @@ class PreCurrencyParam {
         CurrencyRate rate = fixerApi.getCurrencyRate(param.getBaseCurrency(), param.getDate());
         if (param.getListCurrencyName().size() > 0) {
             for (String currency : param.getListCurrencyName()) {
-                listCurrency.put(currency, rate.getRates().get(currency));
+                try {
+                    listCurrency.put(currency, rate.getRates().get(currency));
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                    listCurrency.put(currency, 0.0);
+                }
             }
         } else  {
             listCurrency = rate.getRates();

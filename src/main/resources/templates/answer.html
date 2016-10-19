@@ -4,7 +4,7 @@
 {{ date }}
 
 {% for rate in listRate %}
-{{ rate.key }} = {{ rate.value }}
+{{ rate.key }} = {% if rate.value is not empty %}{{ rate.value }}{% else %}<данных нет>{% endif %}
 
 {% endfor %}
 {% else %}

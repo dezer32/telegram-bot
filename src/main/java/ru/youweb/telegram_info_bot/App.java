@@ -13,7 +13,8 @@ public class App {
 
         Injector injector = Guice.createInjector(new TelegramBotModule());
 
-        injector.getInstance(Flyway.class);
+        Flyway flyway = injector.getInstance(Flyway.class);
+        flyway.migrate();
 
         FirstRunApp firstRunApp = injector.getInstance(FirstRunApp.class);
         firstRunApp.startAsync();

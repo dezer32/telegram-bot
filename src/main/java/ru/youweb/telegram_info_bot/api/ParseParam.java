@@ -53,7 +53,12 @@ class CurrencyParam {
         if (parseMessage != null && !"".equals(parseMessage)) {
             if (isInt(String.valueOf(parseMessage.charAt(0)))) {
                 if (parseMessage.length() == 8 && isInt(parseMessage)) {
-                    date = LocalDate.parse(parseMessage, formatMessage);
+                    try {
+                        date = LocalDate.parse(parseMessage, formatMessage);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        error = 2;
+                    }
                 } else {
                     error = 2;
                 }
