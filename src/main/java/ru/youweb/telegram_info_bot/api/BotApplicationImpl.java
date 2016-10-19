@@ -36,7 +36,7 @@ public class BotApplicationImpl extends BotApplication {
     @Override
     protected void configure() {
         on("/c", (request, response) -> {
-            CurrencyParam message = new ParseParam().parse(request.getFirstParam(), DateTimeFormatter.ofPattern(config.getString("dateFormatMessage")));
+            CurrencyParam message = new ParseParam().parse(request.getFirstParam().toUpperCase(), DateTimeFormatter.ofPattern(config.getString("dateFormatMessage")));
             log.info("Команда: /c");
             if (message.getError() == 0) {
                 log.info("Базовая валюта: " + message.getBaseCurrency());
