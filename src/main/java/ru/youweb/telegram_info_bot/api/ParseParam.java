@@ -68,9 +68,7 @@ class CurrencyParam {
                     for (int i = 0; i < 3; i++) {
                         val += String.valueOf(parseMessage.charAt(i));
                     }
-                    if (listCurrencyName.contains(val)) {
-                        error = 3;
-                    } else {
+                    if (!listCurrencyName.contains(val)) {
                         if (baseCurrency == null || "".equals(baseCurrency)) {
                             baseCurrency = val;
                         } else {

@@ -47,7 +47,6 @@ class PreCurrencyParam {
                 }
                 catch (Exception e) {
                     e.printStackTrace();
-                    listCurrency.put(currency, 0.0);
                 }
             }
         } else  {

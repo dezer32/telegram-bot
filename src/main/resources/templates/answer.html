@@ -3,18 +3,19 @@
 
 {{ date }}
 
+{% if listRate is not empty %}
 {% for rate in listRate %}
-{{ rate.key }} = {% if rate.value is not empty %}{{ rate.value }}{% else %}<данных нет>{% endif %}
+{{ rate.key }} = {% if rate.value is not empty %}{{ rate.value }}{% else %}[нет данных]{% endif %}
 
 {% endfor %}
+{% else %}
+Нет данных
+{% endif %}
 {% else %}
 {% if error == 1 %}
 Некорректные параметры запроса, введите /h для справки.
 {% elseif error == 2 %}
 Дата указана неверно, правильный формат: <b>YYYYMMDD</b>. Пример даты: 19700131.
-{% elseif error == 3 %}
-Валюта в списке повторяется, мы не выдаем очевидные вещи.
-<i>Курс валюты относительно самого себя равен 1.</i>
 {% else %}
 Новая и непонятная ошибка, простите =).
 {% endif %}
