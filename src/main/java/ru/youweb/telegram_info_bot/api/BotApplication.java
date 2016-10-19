@@ -5,6 +5,8 @@ import com.google.common.base.Strings;
 import com.mitchellbosecke.pebble.PebbleEngine;
 import com.mitchellbosecke.pebble.error.PebbleException;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.youweb.telegram_info_bot.telegram.TelegramApi;
 
 import java.io.IOException;
@@ -17,6 +19,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
 
 abstract public class BotApplication {
+
+    private static final Logger logger = LoggerFactory.getLogger(BotApplication.class);
 
     private final TelegramApi telegramApi;
 
@@ -42,21 +46,25 @@ abstract public class BotApplication {
         while (running) {
             try {
                 telegramApi.update().parallelStream().forEach(message -> {
-                    String text = message.getText();
-                    if (text != null) {
-                        List<String> commandWithArgs = Splitter.on(" ").splitToList(text);
-                        if (commandWithArgs.size() > 0) {
-                            BiConsumer<Request, Response> function = routing.get(commandWithArgs.get(0));
-                            if (function != null) {
-                                Request request = new Request();
-                                request.setParams(commandWithArgs.subList(1, commandWithArgs.size()));
-                                Response response = new Response();
-                                function.accept(request, response);
-                                if (!Strings.isNullOrEmpty(response.getContent())) {
-                                    telegramApi.sendAnswer(message.getChat().getId(), response.getContent());
+                    try {
+                        String text = message.getText();
+                        if (text != null) {
+                            List<String> commandWithArgs = Splitter.on(" ").splitToList(text);
+                            if (commandWithArgs.size() > 0) {
+                                BiConsumer<Request, Response> function = routing.get(commandWithArgs.get(0));
+                                if (function != null) {
+                                    Request request = new Request();
+                                    request.setParams(commandWithArgs.subList(1, commandWithArgs.size()));
+                                    Response response = new Response();
+                                    function.accept(request, response);
+                                    if (!Strings.isNullOrEmpty(response.getContent())) {
+                                        telegramApi.sendAnswer(message.getChat().getId(), response.getContent());
+                                    }
                                 }
                             }
                         }
+                    } catch (Exception ex) {
+                        logger.error("Ошибка в процессе обработки сообщения " + message, ex);
                     }
                 });
             } catch (ExecutionException | InterruptedException e) {

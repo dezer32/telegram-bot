@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 class PreCurrencyParam {
 
@@ -31,7 +30,7 @@ class PreCurrencyParam {
             param.setDate(LocalDate.now());
         if (LocalDateTime.now().getHour() < 5)
             param.setDate(LocalDate.now().minusDays(1));
-        if (rateDb.issetInfo(param.getBaseCurrency(), param.getDate())) {
+        if (rateDb.isSetInfo(param.getBaseCurrency(), param.getDate())) {
             return fromBase(param, rateDb, currencyDb);
         } else {
             return fromFixer(param, fixerApi);

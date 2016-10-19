@@ -32,7 +32,7 @@ public class CurrencyRateDb {
                 .fetchOne();
     }
 
-    public boolean issetInfo(String currencyBase, LocalDate date) {
+    public boolean isSetInfo(String currencyBase, LocalDate date) {
         return queryFactory.select(e.value).from(e)
                 .where(e.idCurFrom.eq(currencyDb.getId(currencyBase)),
                         e.date.eq(toSqlDate(date)))
