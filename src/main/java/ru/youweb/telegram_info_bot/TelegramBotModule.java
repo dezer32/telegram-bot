@@ -83,7 +83,6 @@ public class TelegramBotModule extends AbstractModule {
     public Flyway provideFlyway() {
         Flyway flyway = new Flyway();
         flyway.setDataSource(provideHikariDataSource());
-        flyway.migrate();
         return flyway;
     }
 
