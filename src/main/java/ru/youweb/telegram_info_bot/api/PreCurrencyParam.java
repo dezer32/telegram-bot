@@ -16,6 +16,10 @@ class PreCurrencyParam {
     public Map<String, Object> pre(CurrencyParam param, CurrencyRateDb rateDb, CurrencyDb currencyDb, FixerApi fixerApi, DateTimeFormatter format) {
         Map<String, Object> params = new HashMap<>();
         if (param.getError() == 0) {
+            if (param.getDate().isAfter(LocalDate.now()))
+                param.setDate(LocalDate.now());
+            if (LocalDateTime.now().getHour() < 5)
+                param.setDate(LocalDate.now().minusDays(1));
             params.put("base", param.getBaseCurrency());
             params.put("date", param.getDate().format(format));
             params.put("listRate", preListCurrency(param, rateDb, currencyDb, fixerApi));
@@ -26,10 +30,6 @@ class PreCurrencyParam {
     }
 
     private Map<String, Double> preListCurrency(CurrencyParam param, CurrencyRateDb rateDb, CurrencyDb currencyDb, FixerApi fixerApi) {
-        if (param.getDate().isAfter(LocalDate.now()))
-            param.setDate(LocalDate.now());
-        if (LocalDateTime.now().getHour() < 5)
-            param.setDate(LocalDate.now().minusDays(1));
         if (rateDb.isSetInfo(param.getBaseCurrency(), param.getDate())) {
             return fromBase(param, rateDb, currencyDb);
         } else {
